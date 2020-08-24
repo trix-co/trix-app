@@ -1,0 +1,31 @@
+{
+    "expo": {
+        "name": "react-native-fiber-firebase",
+        "version": "1.1.7",
+        "description": "UI elements, multi-screen implemented in React Native, now in one handy kit",
+        "orientation": "portrait",
+        "privacy": "public",
+        "icon": "./assets/app.png",
+        "primaryColor": "#00AAFF",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "cover",
+            "backgroundColor": "#ffffff"
+        },
+        "packagerOpts": {},
+        "androidStatusBar": {
+            "backgroundColor": "#ffffff",
+            "barStyle": "dark-content"
+        },
+        "ios": {
+            "bundleIdentifier": "com.wcandillon.fiber",
+            "buildNumber": "2"
+        },
+        "android": {
+            "package": "com.wcandillon.fiber"
+        },
+        "assetBundlePatterns": ["assets/*"],
+        "slug": "react-native-fiber-firebase",
+        "platforms": ["android", "ios"]
+    }
+}
