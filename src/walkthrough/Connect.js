@@ -1,22 +1,20 @@
 // @flow
 import * as React from "react";
-import {StyleSheet, View, Platform} from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
 
-import {AnimatedView} from "../components";
+import { AnimatedView } from "../components";
 
-import type {BaseProps} from "../components/Types";
+import type { BaseProps } from "../components/Types";
 
 type NoProps = {};
 type VisibleState = {
-    visible: boolean
+    visible: boolean,
 };
 
 // eslint-disable-next-line react/prefer-stateless-function, react/no-multi-comp
 class Phone extends React.Component<BaseProps> {
     render(): React.Node {
-        return (
-            <AnimatedView style={styles.phone} />
-        );
+        return <AnimatedView style={styles.phone} />;
     }
 }
 
@@ -35,9 +33,8 @@ class Mac extends React.Component<BaseProps> {
 
 // eslint-disable-next-line react/no-multi-comp
 export default class Connect extends React.Component<NoProps, VisibleState> {
-
     state = {
-        visible: true
+        visible: true,
     };
 
     show() {
@@ -49,7 +46,7 @@ export default class Connect extends React.Component<NoProps, VisibleState> {
     }
 
     render(): React.Node {
-        const {visible} = this.state;
+        const { visible } = this.state;
         if (!visible) {
             return <View />;
         }
@@ -65,7 +62,7 @@ export default class Connect extends React.Component<NoProps, VisibleState> {
 const styles = StyleSheet.create({
     container: {
         width: 172,
-        height: 134
+        height: 134,
     },
     phone: {
         borderRadius: Platform.OS === "ios" ? 4 : undefined,
@@ -85,13 +82,13 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 3, height: 6 },
         shadowOpacity: 0.54,
         shadowRadius: 9,
-        elevation: 4
+        elevation: 4,
     },
     screenContainer: {
         position: "absolute",
         top: 0,
         right: 0,
-        alignItems: "center"
+        alignItems: "center",
     },
     screen: {
         borderRadius: Platform.OS === "ios" ? 6 : undefined,
@@ -102,16 +99,16 @@ const styles = StyleSheet.create({
         borderTopWidth: 6,
         borderBottomWidth: 25,
         borderLeftWidth: 6,
-        borderRightWidth: 6
+        borderRightWidth: 6,
     },
     foot: {
         backgroundColor: "#CCE9FF",
         width: 40,
-        height: 16
+        height: 16,
     },
     base: {
         backgroundColor: "#F5FBFF",
         width: 82,
-        height: 2
-    }
+        height: 2,
+    },
 });

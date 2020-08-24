@@ -20,7 +20,7 @@ import type { ScreenProps } from "./src/components/Types";
 
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
-import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
+import { SignUpName, SignUpEmail, SignUpPassword, Login, LoginValidate } from "./src/sign-up";
 import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
@@ -214,12 +214,20 @@ const SignUpNavigator = createStackNavigator(
     StackNavigatorOptions
 );
 
+const LoginNavigator = createStackNavigator(
+    {
+        Login: { screen: Login },
+        LoginValidate: { screen: LoginValidate },
+    },
+    StackNavigatorOptions
+);
+
 const AppNavigator = createAppContainer(
     createSwitchNavigator(
         {
             Loading: { screen: Loading },
             Welcome: { screen: Welcome },
-            Login: { screen: Login },
+            Login: { screen: LoginNavigator },
             SignUp: { screen: SignUpNavigator },
             Home: { screen: HomeNavigator },
         },

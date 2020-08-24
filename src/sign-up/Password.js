@@ -43,7 +43,6 @@ export default function Phone() {
                     <TextField
                         //style={{ marginVertical: 10, fontSize: 17 }}
                         placeholder="123456"
-                        contrast
                         autoCapitalize="none"
                         keyboardType="phone-pad"
                         autoCorrect={false}
