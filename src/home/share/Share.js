@@ -1,7 +1,15 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import {StyleSheet, View, Dimensions, TouchableWithoutFeedback, TouchableOpacity, Modal, Platform} from "react-native";
+import {
+    StyleSheet,
+    View,
+    Dimensions,
+    TouchableWithoutFeedback,
+    TouchableOpacity,
+    Modal,
+    Platform,
+} from "react-native";
 import { Camera } from "expo-camera";
 import * as Permissions from "expo-permissions";
 import { Feather as Icon } from "@expo/vector-icons";
@@ -9,34 +17,32 @@ import { Feather as Icon } from "@expo/vector-icons";
 import EnableCameraPermission from "./EnableCameraPermission";
 import FlashIcon from "./FlashIcon";
 
-import {RefreshIndicator, Theme, NavHeader, SpinningIndicator, serializeException} from "../../components";
-import type {ScreenProps} from "../../components/Types";
+import { RefreshIndicator, Theme, NavHeader, SpinningIndicator, serializeException } from "../../components";
+import type { ScreenProps } from "../../components/Types";
 
 type ShareState = {
     hasCameraPermission: boolean | null,
     type: number,
     flashMode: number,
     loading: boolean,
-    ratio: string | void
+    ratio: string | void,
 };
 
 export default class Share extends React.Component<ScreenProps<>, ShareState> {
-
     // $FlowFixMe
     camera = React.createRef();
-
     state = {
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
         flashMode: Camera.Constants.FlashMode.off,
         loading: false,
-        ratio: undefined
+        ratio: undefined,
     };
 
     async componentDidMount(): Promise<void> {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA);
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({
-            hasCameraPermission: status === "granted"
+            hasCameraPermission: status === "granted",
         });
     }
 
@@ -44,10 +50,10 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         if (Platform.OS === "android") {
             const DESIRED_RATIO = "1:1";
             const ratios = await this.camera.current.getSupportedRatiosAsync();
-            const ratio = ratios.find(r => r === DESIRED_RATIO) || ratios[ratios.length - 1];
+            const ratio = ratios.find((r) => r === DESIRED_RATIO) || ratios[ratios.length - 1];
             this.setState({ ratio });
         }
-    }
+    };
 
     @autobind
     toggle() {
@@ -56,21 +62,21 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
 
     @autobind
     toggleFlash() {
-        const {flashMode} = this.state;
-        const {on, off} = Camera.Constants.FlashMode;
+        const { flashMode } = this.state;
+        const { on, off } = Camera.Constants.FlashMode;
         this.setState({ flashMode: flashMode === on ? off : on });
     }
 
     @autobind
     toggleCamera() {
-        const {type} = this.state;
-        const {front, back} = Camera.Constants.Type;
+        const { type } = this.state;
+        const { front, back } = Camera.Constants.Type;
         this.setState({ type: type === back ? front : back });
     }
 
     @autobind
     async snap(): Promise<void> {
-        const {navigation} = this.props;
+        const { navigation } = this.props;
         try {
             this.setState({ loading: true });
             const picture = await this.camera.current.takePictureAsync({ base64: false, skipProcessing: true });
@@ -84,12 +90,12 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     }
 
     render(): React.Node {
-        const {onCameraReady} = this;
-        const {navigation} = this.props;
-        const {hasCameraPermission, type, flashMode, loading, ratio} = this.state;
+        const { onCameraReady } = this;
+        const { navigation } = this.props;
+        const { hasCameraPermission, type, flashMode, loading, ratio } = this.state;
         let cameraHeight = width;
         if (ratio) {
-            const [w, h] = ratio.split(":").map(n => parseInt(n, 10));
+            const [w, h] = ratio.split(":").map((n) => parseInt(n, 10));
             cameraHeight *= h / w;
         }
         if (hasCameraPermission === null) {
@@ -103,11 +109,11 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         }
         return (
             <View style={styles.container}>
-                <NavHeader title="Share" {...{navigation}} />
+                <NavHeader title="Share" {...{ navigation }} />
                 <Camera
                     ref={this.camera}
-                    style={{ width, height: cameraHeight }}
-                    {...{type, flashMode, onCameraReady, ratio}}
+                    style={{ width, height: cameraHeight, flexGrow: 1 }}
+                    {...{ type, flashMode, onCameraReady, ratio }}
                 >
                     <View style={styles.cameraBtns}>
                         <TouchableWithoutFeedback onPress={this.toggleCamera}>
@@ -115,6 +121,9 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
                                 <Icon name="rotate-ccw" style={styles.rotate} size={25} />
                             </View>
                         </TouchableWithoutFeedback>
+                        <TouchableOpacity onPress={this.snap}>
+                            <View style={styles.btn} />
+                        </TouchableOpacity>
                         <TouchableWithoutFeedback onPress={this.toggleFlash}>
                             <View>
                                 <FlashIcon on={flashMode === Camera.Constants.FlashMode.on} />
@@ -122,11 +131,6 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
                         </TouchableWithoutFeedback>
                     </View>
                 </Camera>
-                <View style={styles.footer}>
-                    <TouchableOpacity onPress={this.snap}>
-                        <View style={styles.btn} />
-                    </TouchableOpacity>
-                </View>
                 <Modal transparent visible={loading} onRequestClose={this.toggle}>
                     <View style={styles.modal}>
                         <SpinningIndicator />
@@ -137,45 +141,48 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     }
 }
 
-const {width, height} = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const ratio = width / height;
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     refreshContainer: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     cameraBtns: {
-        position: "absolute",
-        bottom: 0,
-        width,
+        //position: "absolute",
+        //bottom: 0,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "flex-end",
+        //width,
         flexDirection: "row",
         justifyContent: "space-between",
-        padding: Theme.spacing.base
+        padding: Theme.spacing.base,
     },
     rotate: {
         backgroundColor: "transparent",
-        color: "white"
+        color: "white",
     },
     footer: {
         flexGrow: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     btn: {
-        height: ratio < 0.75 ? 100 : 60,
-        width: ratio < 0.75 ? 100 : 60,
-        borderRadius: ratio < 0.75 ? 50 : 30,
-        borderWidth: ratio < 0.75 ? 20 : 10,
-        borderColor: Theme.palette.lightGray
+        height: ratio < 0.75 ? 50 : 30,
+        width: ratio < 0.75 ? 50 : 30,
+        borderRadius: ratio < 0.75 ? 25 : 15,
+        borderWidth: ratio < 0.75 ? 8 : 4,
+        borderColor: Theme.palette.primary,
     },
     modal: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         justifyContent: "center",
-        alignItems: "center"
-    }
+        alignItems: "center",
+    },
 });

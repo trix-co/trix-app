@@ -1,7 +1,8 @@
 // @flow
 /* eslint-disable no-console, func-names */
+<script src="http://localhost:8097"></script>;
 import * as React from "react";
-import { StatusBar, Platform } from "react-native";
+import { StatusBar, Platform, YellowBox } from "react-native";
 import { StyleProvider } from "native-base";
 import {
     createAppContainer,
@@ -21,12 +22,13 @@ import type { ScreenProps } from "./src/components/Types";
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login, LoginValidate } from "./src/sign-up";
-import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore } from "./src/home";
+import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, PhotoLib } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
 
 console.disableYellowBox = true;
+YellowBox.ignoreWarnings(["Warning: Async Storage has been extracted from react-native core"]);
 
 // $FlowFixMe
 const SFProTextMedium = require("./assets/fonts/SF-Pro-Text-Medium.otf");
@@ -133,7 +135,7 @@ export default class App extends React.Component<{}> {
     userFeedStore = new FeedStore();
 
     componentDidMount() {
-        StatusBar.setBarStyle("dark-content");
+        //StatusBar.setBarStyle("light-content");
         if (Platform.OS === "android") {
             StatusBar.setBackgroundColor("white");
         }
@@ -186,6 +188,7 @@ const ShareNavigator = createStackNavigator(
 const HomeTabs = createBottomTabNavigator(
     {
         Explore: { screen: ExploreNavigator },
+        PhotoLib: { screen: PhotoLib },
         Share: { screen: ShareNavigator },
         Profile: { screen: ProfileNavigator },
     },
