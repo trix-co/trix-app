@@ -65,6 +65,7 @@
         "react-devtools": "^4.8.2",
         "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
         "react-native-aws3": "^0.0.9",
+        "react-native-expo-cached-image": "^1.2.1",
         "react-native-gesture-handler": "~1.6.0",
         "react-native-screens": "~2.9.0",
         "react-native-svg": "12.1.0",
