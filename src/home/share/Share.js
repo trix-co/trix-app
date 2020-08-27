@@ -35,6 +35,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
         flashMode: Camera.Constants.FlashMode.off,
+        autoFocus: Camera.Constants.AutoFocus.on,
         loading: false,
         ratio: undefined,
     };
@@ -92,7 +93,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     render(): React.Node {
         const { onCameraReady } = this;
         const { navigation } = this.props;
-        const { hasCameraPermission, type, flashMode, loading, ratio } = this.state;
+        const { hasCameraPermission, type, flashMode, loading, ratio, autoFocus } = this.state;
         let cameraHeight = width;
         if (ratio) {
             const [w, h] = ratio.split(":").map((n) => parseInt(n, 10));
@@ -113,7 +114,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
                 <Camera
                     ref={this.camera}
                     style={{ width, height: cameraHeight, flexGrow: 1 }}
-                    {...{ type, flashMode, onCameraReady, ratio }}
+                    {...{ type, flashMode, onCameraReady, ratio, autoFocus }}
                 >
                     <View style={styles.cameraBtns}>
                         <TouchableWithoutFeedback onPress={this.toggleCamera}>

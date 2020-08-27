@@ -2,5 +2,5 @@
 export default class SignUpStore {
     static displayName: string;
     static phoneNumber: string;
-    static verificationCode: string;
+    static verificationId: string;
 }

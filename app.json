@@ -1,8 +1,8 @@
 {
     "expo": {
-        "name": "react-native-fiber-firebase",
+        "name": "trix-app",
         "version": "1.1.7",
-        "description": "UI elements, multi-screen implemented in React Native, now in one handy kit",
+        "description": "trix is a photo app on a mission to protect the digital identity and privacy of our users",
         "orientation": "portrait",
         "privacy": "public",
         "icon": "./assets/app.png",
@@ -18,14 +18,14 @@
             "barStyle": "dark-content"
         },
         "ios": {
-            "bundleIdentifier": "com.wcandillon.fiber",
+            "bundleIdentifier": "com.dfeld.trix",
             "buildNumber": "2"
         },
         "android": {
-            "package": "com.wcandillon.fiber"
+            "package": "com.dfeld.trix"
         },
         "assetBundlePatterns": ["assets/*"],
-        "slug": "react-native-fiber-firebase",
+        "slug": "trix-app",
         "platforms": ["android", "ios"]
     }
 }

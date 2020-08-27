@@ -74,8 +74,8 @@ export default function Phone() {
                                 setVerificationId(verificationId);
                                 SignUpStore.verificationId = verificationId;
                                 SignUpStore.phoneNumber = phoneNumber;
-                                console.log(SignUpStore.verificationId);
-                                console.log(SignUpStore.phoneNumber);
+                                //console.log(SignUpStore.verificationId);
+                                //console.log(SignUpStore.phoneNumber);
                                 navigation.navigate("SignUpPassword");
                             } catch (err) {
                                 alert("Invalid phone number entered.");

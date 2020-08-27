@@ -1,6 +1,5 @@
 // @flow
 /* eslint-disable no-console, func-names */
-<script src="http://localhost:8097"></script>;
 import * as React from "react";
 import { StatusBar, Platform, YellowBox } from "react-native";
 import { StyleProvider } from "native-base";
@@ -16,7 +15,7 @@ import { Provider, inject } from "mobx-react/native";
 import { Feather } from "@expo/vector-icons";
 import * as Font from "expo-font";
 
-import { Images, Firebase, FeedStore } from "./src/components";
+import { Images, Firebase, FeedStore, PhotoStore } from "./src/components";
 import type { ScreenProps } from "./src/components/Types";
 
 import { Welcome } from "./src/welcome";
@@ -29,7 +28,6 @@ import variables from "./native-base-theme/variables/commonColor";
 
 console.disableYellowBox = true;
 YellowBox.ignoreWarnings(["Warning: Async Storage has been extracted from react-native core"]);
-
 // $FlowFixMe
 const SFProTextMedium = require("./assets/fonts/SF-Pro-Text-Medium.otf");
 // $FlowFixMe
@@ -75,10 +73,10 @@ if (!console.ignoredYellowBox) {
 // $FlowFixMe
 console.ignoredYellowBox.push("Setting a timer");
 
-@inject("profileStore", "feedStore", "userFeedStore")
+@inject("profileStore", "feedStore", "userFeedStore", "photoStore")
 class Loading extends React.Component<ScreenProps<>> {
     async componentDidMount(): Promise<void> {
-        const { navigation, profileStore, feedStore, userFeedStore } = this.props;
+        const { navigation, profileStore, feedStore, userFeedStore, photoStore } = this.props;
         await Loading.loadStaticResources();
         Firebase.init();
         Firebase.auth.onAuthStateChanged((user) => {
@@ -90,12 +88,18 @@ class Loading extends React.Component<ScreenProps<>> {
                     .collection("feed")
                     .where("uid", "==", uid)
                     .orderBy("timestamp", "desc");
+                const photoQuery = Firebase.firestore
+                    .collection("nativepics")
+                    .where("uid", "==", uid)
+                    .orderBy("timestamp", "desc");
+
+                photoStore.init(photoQuery);
                 profileStore.init();
                 feedStore.init(feedQuery);
                 userFeedStore.init(userFeedQuery);
                 navigation.navigate("Home");
             } else {
-                navigation.navigate("Welcome");
+                navigation.navigate("Home");
             }
         });
     }
@@ -133,6 +137,7 @@ export default class App extends React.Component<{}> {
     profileStore = new ProfileStore();
     feedStore = new FeedStore();
     userFeedStore = new FeedStore();
+    photoStore = new PhotoStore();
 
     componentDidMount() {
         //StatusBar.setBarStyle("light-content");
@@ -142,10 +147,10 @@ export default class App extends React.Component<{}> {
     }
 
     render(): React.Node {
-        const { feedStore, profileStore, userFeedStore } = this;
+        const { feedStore, profileStore, userFeedStore, photoStore } = this;
         return (
             <StyleProvider style={getTheme(variables)}>
-                <Provider {...{ feedStore, profileStore, userFeedStore }}>
+                <Provider {...{ feedStore, profileStore, userFeedStore, photoStore }}>
                     <AppNavigator onNavigationStateChange={() => undefined} />
                 </Provider>
             </StyleProvider>
