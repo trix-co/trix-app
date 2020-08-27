@@ -16,7 +16,7 @@ type NavHeaderProps = NavigationProps<*> & {
 };
 
 export default class NavHeader extends React.Component<NavHeaderProps> {
-    bar = StatusBar.setBarStyle("dark-content", true);
+    //bar = StatusBar.setBarStyle("dark-content", true);
 
     @autobind
     onPress() {

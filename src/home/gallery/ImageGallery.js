@@ -118,8 +118,6 @@ class ImageGallery extends React.Component {
         const bottomClippingOffset = isDragging
             ? -topClippingOffset
             : -topClippingOffset + Layout.tabBarHeight + SOME_NUMBER_I_DONT_UNDERSTAND - Layout.statusBarHeight;
-        StatusBar.setBarStyle("dark-content", true);
-        console.log(Layout.headerHeight);
 
         return (
             <View

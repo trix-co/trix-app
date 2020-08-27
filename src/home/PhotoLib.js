@@ -11,9 +11,20 @@ import {
 } from "react-native";
 
 import ImageGallery, { openImageGallery } from "./gallery";
-import { ScreenProps } from "../components/Types";
 import type { Profile } from "../../components/Model";
-import { RefreshIndicator, Theme, NavHeader, SpinningIndicator, serializeException } from "../components";
+import { inject, observer } from "mobx-react/native";
+import {
+    RefreshIndicator,
+    Theme,
+    NavHeader,
+    Firebase,
+    SpinningIndicator,
+    serializeException,
+    PhotoStore,
+    FeedStore,
+} from "../components";
+import { ProfileStore } from "./";
+import { NavigationEvents } from "react-navigation";
 
 type LibState = {
     name: string,
@@ -22,14 +33,21 @@ type LibState = {
     hasCameraRollPermission: boolean | null,
 };
 
-class ListItem extends React.Component {
-    _openInImageGallery = () => {
-        let { item } = this.props;
+type InjectedProps = {
+    photoStore: PhotoStore,
+    feedStore: FeedStore,
+};
 
+@inject("photoStore")
+@observer
+class ListItem extends React.Component<InjectedProps> {
+    _openInImageGallery = () => {
+        const feed = this.props.photoStore.feed;
+        let { item } = this.props;
         this._view.measure((rx, ry, w, h, x, y) => {
             openImageGallery({
                 animationMeasurements: { w, h, x, y },
-                list,
+                list: feed,
                 item,
             });
         });
@@ -37,7 +55,7 @@ class ListItem extends React.Component {
 
     render() {
         let { item } = this.props;
-
+        //sconsole.log(this.props.feedStore.feed);
         return (
             <TouchableWithoutFeedback onPress={this._openInImageGallery}>
                 <Image
@@ -52,13 +70,22 @@ class ListItem extends React.Component {
     }
 }
 
-class ImageGrid extends React.Component {
+@inject("photoStore")
+@observer
+class ImageGrid extends React.Component<InjectedProps> {
+    componentDidMount() {
+        this.loadFeed();
+    }
+    loadFeed = () => this.props.photoStore.checkForNewEntriesInFeed();
     render() {
+        const feed = this.props.photoStore.feed;
         return (
             <View style={styles.imagegrid}>
+                <NavigationEvents onWillFocus={this.loadFeed} />
+
                 <NavHeader title="Photos" />
                 <ScrollView contentContainerStyle={styles.layout}>
-                    {list.map((item) => (
+                    {feed.map((item) => (
                         <ListItem key={item.imageUrl} item={item} />
                     ))}
                 </ScrollView>
@@ -107,23 +134,23 @@ const styles = StyleSheet.create({
     },
 });
 
-const list = [
-    {
-        description: "Image 1",
-        imageUrl: "https://trix-public.s3-us-west-2.amazonaws.com/trkcxeorzuiz_output_bbox.jpg",
-        width: 480,
-        height: 720,
-    },
-    {
-        description: "Image 2",
-        imageUrl: "http://placehold.it/640x640&text=Image%202",
-        width: 640,
-        height: 640,
-    },
-    {
-        description: "Image 3",
-        imageUrl: "http://placehold.it/640x640&text=Image%203",
-        width: 640,
-        height: 640,
-    },
-];
+// const list = [
+//     {
+//         description: "Image 1",
+//         imageUrl: "https://trix-public.s3-us-west-2.amazonaws.com/trkcxeorzuiz_output_bbox.jpg",
+//         width: 480,
+//         height: 720,
+//     },
+//     {
+//         description: "Image 2",
+//         imageUrl: "http://placehold.it/640x640&text=Image%202",
+//         width: 640,
+//         height: 640,
+//     },
+//     {
+//         description: "Image 3",
+//         imageUrl: "http://placehold.it/640x640&text=Image%203",
+//         width: 640,
+//         height: 640,
+//     },
+// ];

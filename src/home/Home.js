@@ -21,7 +21,7 @@ export class HomeTab extends React.Component<NavigationProps<*>> {
         const { navigation } = this.props;
         const navState = navigation.state;
         const cIdx = navState.index;
-        console.log(cIdx);
+        //console.log(cIdx);
         return (
             <SafeAreaView style={styles.tabs}>
                 <View style={styles.container}>

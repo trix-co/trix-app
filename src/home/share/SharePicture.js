@@ -2,37 +2,43 @@
 import moment from "moment";
 import autobind from "autobind-decorator";
 import * as React from "react";
-import {StyleSheet, TextInput, Image, Dimensions, View, Alert} from "react-native";
-import {Content} from "native-base";
+import { StyleSheet, TextInput, Image, Dimensions, View, Alert } from "react-native";
+import { Content } from "native-base";
 
 import {
-    NavHeader, Button, Theme, RefreshIndicator, Firebase, ImageUpload, serializeException, Text
+    NavHeader,
+    Button,
+    Theme,
+    RefreshIndicator,
+    Firebase,
+    ImageUpload,
+    serializeException,
+    Text,
 } from "../../components";
 
-import type {ScreenParams} from "../../components/Types";
-import type {Post} from "../../components/Model";
-import type {Picture} from "../../components/ImageUpload";
+import type { ScreenParams } from "../../components/Types";
+import type { Post } from "../../components/Model";
+import type { Picture } from "../../components/ImageUpload";
 
 type SharePictureState = {
     loading: boolean,
-    caption: string
+    caption: string,
 };
 
 export default class SharePicture extends React.Component<ScreenParams<Picture>, SharePictureState> {
-
     id: string;
     preview: string;
     url: string;
 
     state = {
         loading: false,
-        caption: ""
+        caption: "",
     };
 
     @autobind
     async upload(): Promise<void> {
         try {
-            const {navigation} = this.props;
+            const { navigation } = this.props;
             const picture = navigation.state.params;
             this.id = ImageUpload.uid();
             this.preview = await ImageUpload.preview(picture);
@@ -46,25 +52,22 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
 
     @autobind
     async onPress(): Promise<void> {
-        const {navigation} = this.props;
-        const {caption} = this.state;
+        const { navigation } = this.props;
+        const { caption } = this.state;
         this.setState({ loading: true });
         try {
             await this.upload();
-            const {uid} = Firebase.auth.currentUser;
-            const post: Post = {
+            const { uid } = Firebase.auth.currentUser;
+            const post: NativePicture = {
                 id: this.id,
+                width: navigation.state.params.width / 4,
+                height: navigation.state.params.height / 4,
                 uid,
-                comments: 0,
-                likes: [],
                 timestamp: parseInt(moment().format("X"), 10),
-                text: caption,
-                picture: {
-                    uri: this.url,
-                    preview: this.preview
-                }
+                imageUrl: this.url,
+                preview: this.preview,
             };
-            await Firebase.firestore.collection("feed").doc(this.id).set(post);
+            await Firebase.firestore.collection("nativepics").doc(this.id).set(post);
             navigation.pop(1);
             navigation.navigate("Explore");
         } catch (e) {
@@ -80,9 +83,9 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
     }
 
     render(): React.Node {
-        const {onPress, onChangeText} = this;
-        const {navigation} = this.props;
-        const {loading} = this.state;
+        const { onPress, onChangeText } = this;
+        const { navigation } = this.props;
+        const { loading } = this.state;
         const source = navigation.state.params;
         if (loading) {
             return (
@@ -94,7 +97,7 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
         }
         return (
             <View style={styles.container}>
-                <NavHeader back title="Share" {...{navigation}} />
+                <NavHeader back title="Share" {...{ navigation }} />
                 <Content>
                     <Image {...{ source }} style={styles.picture} />
                     <TextInput
@@ -102,44 +105,38 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
                         placeholder="Write Caption"
                         underlineColorAndroid="transparent"
                         onSubmitEditing={onPress}
-                        {...{onChangeText}}
+                        {...{ onChangeText }}
                     />
-                    <Button
-                        primary
-                        full
-                        label="Share Picture"
-                        style={styles.btn}
-                        {...{onPress}}
-                    />
+                    <Button primary full label="Share Picture" style={styles.btn} {...{ onPress }} />
                 </Content>
             </View>
         );
     }
 }
 
-const {width} = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
     loading: {
         flexGrow: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     container: {
-        flexGrow: 1
+        flexGrow: 1,
     },
     picture: {
         width,
-        height: width
+        height: width,
     },
     textInput: {
         flexGrow: 1,
         padding: Theme.spacing.base,
-        ...Theme.typography.regular
+        ...Theme.typography.regular,
     },
     btn: {
-        margin: Theme.spacing.base
+        margin: Theme.spacing.base,
     },
     saving: {
-        marginBottom: Theme.spacing.base
-    }
+        marginBottom: Theme.spacing.base,
+    },
 });
