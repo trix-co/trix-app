@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
-import CachedImage from "react-native-expo-cached-image";
+//import CachedImage from "react-native-expo-cached-image";
+import CachedImage from "../../components/CachedImage";
 
 import ImageGalleryPlaceholder from "./ImageGalleryPlaceholder";
 import { shallowEquals } from "./ShallowEquals";
 import calculateImageDimensions from "./calculateImageDimensions";
+//import { Image } from "react-native-expo-image-cache";
 
 export default class ImageGalleryImage extends React.Component {
     static propTypes = {
@@ -30,9 +32,9 @@ export default class ImageGalleryImage extends React.Component {
 
         let imageStyle = {
             width,
-            height: width,
+            height: width * 2,
             opacity: isVisible ? 1 : 0,
-            borderRadius: 0.1,
+            borderRadius: 0.0,
         };
 
         if (item.get("image_url")) {

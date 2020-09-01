@@ -1,4 +1,5 @@
 import React from "react";
+//import { Image } from "react-native-expo-image-cache";
 import {
     Dimensions,
     Image,
@@ -12,6 +13,7 @@ import {
 
 import ImageGallery, { openImageGallery } from "./gallery";
 import type { Profile } from "../../components/Model";
+import CachedImage from "../components/CachedImage";
 import { inject, observer } from "mobx-react/native";
 import {
     RefreshIndicator,
@@ -58,9 +60,11 @@ class ListItem extends React.Component<InjectedProps> {
         //sconsole.log(this.props.feedStore.feed);
         return (
             <TouchableWithoutFeedback onPress={this._openInImageGallery}>
-                <Image
+                <CachedImage
                     ref={(view) => {
-                        this._view = view;
+                        console.log("bingo");
+                        console.log(view);
+                        this._view = view._view;
                     }}
                     source={{ uri: item.imageUrl }}
                     style={styles.thumbnail}

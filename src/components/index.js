@@ -23,6 +23,7 @@ export { default as Feed } from "./Feed";
 export { default as FeedStore } from "./FeedStore";
 export { default as SpinningIndicator } from "./SpinningIndicator";
 export { default as PhotoStore } from "./PhotoStore";
+export { default as CachedImage } from "./CachedImage";
 
 export const serializeException = (e: string | {}): string => {
     if (typeof e === "string") {

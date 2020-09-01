@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Animated, Image, StyleSheet, Platform, View } from "react-native";
 import { connect } from "react-redux";
-import CachedImage from "react-native-expo-cached-image";
+import CachedImage from "../../components/CachedImage";
+//import { Image } from "react-native-expo-image-cache";
 
 import ImageGalleryPlaceholder from "./ImageGalleryPlaceholder";
 import Layout from "./Layout";
@@ -137,7 +138,7 @@ class ImageGalleryAnimatedImage extends React.PureComponent {
                     },
                 ]}
             >
-                <Animated.CachedImage
+                <Animated.Image
                     key={source.uri}
                     renderToHardwareTextureAndroid
                     fadeDuration={0}

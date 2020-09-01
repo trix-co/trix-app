@@ -108,15 +108,11 @@ class ImageGalleryItem extends React.Component {
         if (this.state.shouldRender) {
             return (
                 <View key={index} style={[{ width }, styles.itemContainer]}>
-                    <TouchableWithoutFeedback onPress={this.props.onPress}>
-                        <View style={[{ width, height: width }, styles.imageContainer]}>
-                            {lifecycle !== OPENING_ANIMATION_IN_PROGRESS || Platform.OS === "ios"
-                                ? this._renderImage()
-                                : null}
-                        </View>
-                    </TouchableWithoutFeedback>
-
-                    {/* {description} */}
+                    <View style={[{ width, height: width }, styles.imageContainer]}>
+                        {lifecycle !== OPENING_ANIMATION_IN_PROGRESS || Platform.OS === "ios"
+                            ? this._renderImage()
+                            : null}
+                    </View>
                 </View>
             );
         } else {
