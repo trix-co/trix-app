@@ -138,7 +138,7 @@ class ImageGallery extends React.Component {
                         onPageSelected={this._onPageSelected}
                         onPressItem={this._closeGallery}
                         style={styles.list}
-                        renderDescription={this.props.renderDescription}
+                        renderDescription={false}
                     />
 
                     <ImageGalleryHeaderBar
@@ -159,6 +159,7 @@ class ImageGallery extends React.Component {
                             top: topClippingOffset,
                             bottom: bottomClippingOffset,
                             overflow: "hidden",
+                            flex: 1,
                             height: this._isAnimatedImageVisible() ? undefined : 0,
                         },
                     ]}
@@ -174,8 +175,6 @@ class ImageGallery extends React.Component {
                         />
                     </View>
                 </View>
-
-                {isVisible && <StatusBar barStyle="default" />}
             </View>
         );
     }
@@ -282,7 +281,7 @@ class ImageGallery extends React.Component {
     };
 
     _onMoveShouldSetPanResponder = (e, { moveY, dx, dy }) => {
-        const topOfDescriptionBox = Layout.window.width + Layout.headerHeight; // Images are 1:1 aspect ratio, full screen width
+        const topOfDescriptionBox = Layout.window.width * 2; // Images are 1:1 aspect ratio, full screen width
 
         if (this.props.lifecycle !== OPEN_AND_IDLE) {
             return false;
@@ -447,6 +446,7 @@ let styles = StyleSheet.create({
     },
     list: {
         position: "absolute",
+        flex: 1,
         top: Layout.headerHeight,
         bottom: 0,
         left: 0,

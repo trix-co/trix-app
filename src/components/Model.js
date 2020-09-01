@@ -8,7 +8,7 @@ export type TrixPicture = {
     width: number,
     height: number,
     id: string,
-    native_id: string,
+    unalteredImageUrl: string,
     timestamp: number,
     uid: string,
     imageUrl: string,

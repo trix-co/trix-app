@@ -89,7 +89,7 @@ class Loading extends React.Component<ScreenProps<>> {
                     .where("uid", "==", uid)
                     .orderBy("timestamp", "desc");
                 const photoQuery = Firebase.firestore
-                    .collection("nativepics")
+                    .collection("trixpix")
                     .where("uid", "==", uid)
                     .orderBy("timestamp", "desc");
 
@@ -99,7 +99,7 @@ class Loading extends React.Component<ScreenProps<>> {
                 userFeedStore.init(userFeedQuery);
                 navigation.navigate("Home");
             } else {
-                navigation.navigate("Home");
+                navigation.navigate("Welcome");
             }
         });
     }
