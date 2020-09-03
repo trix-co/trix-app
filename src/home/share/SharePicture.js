@@ -85,8 +85,8 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
             const { uid } = Firebase.auth.currentUser;
             const post: NativePicture = {
                 id: this.id,
-                width: 800,
-                height: 800 * (navigation.state.params.height / navigation.state.params.width),
+                width: 1600,
+                height: 1600 * (navigation.state.params.height / navigation.state.params.width),
                 uid,
                 timestamp: parseInt(moment().format("X"), 10),
                 imageUrl: this.url,

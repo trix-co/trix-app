@@ -1,8 +1,22 @@
+import Layout from "./Layout";
+
 export default function calculateImageDimensions(item, maxLength) {
     let originalWidth = item.getIn(["asset", "width"]);
     let originalHeight = item.getIn(["asset", "height"]);
-    console.log(maxLength);
-    maxLength = maxLength * 1.7309;
+    console.log(
+        "MaxLength:",
+        maxLength,
+        "| OG Width: ",
+        originalWidth,
+        "| OG Height:",
+        originalHeight,
+        "| Screenwidth:",
+        Layout.window.width,
+        "| HeightToMaxHeight:",
+        originalHeight / maxLength,
+        "| WidthToMaxWidth:",
+        originalWidth / Layout.window.width
+    );
 
     if (originalWidth == null || originalHeight == null) {
         return {
@@ -12,20 +26,21 @@ export default function calculateImageDimensions(item, maxLength) {
             marginVertical: 0,
         };
     } else if (originalWidth > originalHeight) {
-        let height = (originalHeight / originalWidth) * maxLength;
+        let height = (maxLength * (originalHeight / maxLength)) / (originalWidth / Layout.window.width);
         return {
-            constrainedHeight: height * 0.578,
-            constrainedWidth: maxLength * 0.578,
+            constrainedHeight: height,
+            constrainedWidth: Layout.window.width,
             marginHorizontal: 0,
-            marginVertical: 0,
+            marginVertical: (maxLength - height) / 2,
         };
     } else {
-        let width = (originalWidth / originalHeight) * maxLength;
+        let height = (maxLength * (originalHeight / maxLength)) / (originalWidth / Layout.window.width);
+        console.log();
         return {
-            constrainedWidth: width,
-            constrainedHeight: maxLength,
+            constrainedWidth: Layout.window.width,
+            constrainedHeight: height,
             marginHorizontal: 0,
-            marginVertical: 0,
+            marginVertical: (maxLength - height) / 2,
         };
     }
 }

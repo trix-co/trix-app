@@ -54,7 +54,7 @@ class ImageGalleryAnimatedImage extends React.PureComponent {
         if (uri) {
             let { constrainedWidth, constrainedHeight, marginHorizontal, marginVertical } = calculateImageDimensions(
                 item,
-                Layout.window.width
+                Layout.height
             );
 
             return (
@@ -93,7 +93,7 @@ class ImageGalleryAnimatedImage extends React.PureComponent {
 
         let { constrainedWidth, constrainedHeight, marginHorizontal, marginVertical } = calculateImageDimensions(
             item,
-            Layout.window.width
+            Layout.height
         );
 
         let { x, y, w, h } = animationMeasurements;

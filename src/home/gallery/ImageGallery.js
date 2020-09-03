@@ -158,7 +158,6 @@ class ImageGallery extends React.Component {
                         {
                             top: topClippingOffset,
                             bottom: bottomClippingOffset,
-                            overflow: "hidden",
                             flex: 1,
                             height: this._isAnimatedImageVisible() ? undefined : 0,
                         },

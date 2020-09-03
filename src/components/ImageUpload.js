@@ -30,7 +30,7 @@ export default class ImageUpload {
     static async upload(ogPic: Picture): Promise<string> {
         const picture = await ImageManipulator.manipulateAsync(
             ogPic.uri,
-            [{ resize: { width: 800, height: 800 * (ogPic.height / ogPic.width) } }],
+            [{ resize: { width: 1600, height: 1600 * (ogPic.height / ogPic.width) } }],
             { base64: false, format: "jpeg" }
         );
 
