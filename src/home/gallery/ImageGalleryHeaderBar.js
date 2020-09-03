@@ -19,19 +19,24 @@ export default class ImageGalleryHeaderBar extends React.Component {
     async shareImage(): Promise<void> {
         try {
             let item = this.props.item;
-            sharing = await Sharing.isAvailableAsync();
-            console.log(sharing);
             const values = [];
             for (var val of item.values()) {
                 values.push(val);
             }
             const remoteURI = values[0];
             const hashed = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, remoteURI);
-            const localURI = `${FileSystem.cacheDirectory}${hashed}`;
+            const localURI = `${FileSystem.cacheDirectory}${hashed}.jpg`;
+            console.log("locall", localURI);
             if (Platform.OS === "android") {
-                const share = await Sharing.shareAsync(remoteURI);
+                const share = await Sharing.shareAsync(localURI);
             } else {
-                Share.share({ url: remoteURI, title: "test lol" });
+                Share.share(
+                    {
+                        url: localURI,
+                        title: "test lol",
+                    },
+                    { UTI: "public.jpeg" }
+                );
             }
         } catch (e) {
             console.error(e);

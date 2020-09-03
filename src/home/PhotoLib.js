@@ -174,6 +174,7 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
         if (result.cancelled === false) {
             this.setState({ loading: true });
             const { uri, width, height } = result;
+            console.log("heyyo", uri);
             const picture: Picture = {
                 uri,
                 width,
