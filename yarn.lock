@@ -3217,6 +3217,11 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
+"@react-native-community/viewpager@^4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@react-native-community/viewpager/-/viewpager-4.1.6.tgz#788f401f883929e8ac3698e328caef40b146f36e"
+  integrity sha512-zNPQlgrPSB4JHT7w+kB7tTNsbP8H+Tqg1m+AszSArHCwSK+4dl1mgUt7hDd6XX3TTXpH2CdDsRx2cmJTTAweXw==
+
 "@react-navigation/core@~3.5.1":
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.5.2.tgz#3a3d147b8419e5839e0f2ad4dea086bd2d307fe3"
@@ -7732,6 +7737,11 @@ expo-screen-orientation@~1.1.1:
   integrity sha512-o3RhmidIhVK4lXHVActnO2iD0ZrZKxzWuRrJaTSpRsvRjCabeE74xkpZWPGcEcXhAxEwMaAAizHO8rlJDdrVzw==
   dependencies:
     fbjs "1.0.0"
+
+expo-sharing@~8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-8.2.1.tgz#2d517e39d88603fcd154a3da00c8d26559840f42"
+  integrity sha512-jEMi7OAEyOokrAEsyHgjjgO+Js1BjilvxVpqVRwk8ywxpVwNya07RmC+8XOBTvITvIxNGQ8jq87Rt3IEdqYYjQ==
 
 expo-splash-screen@^0.5.0:
   version "0.5.0"
@@ -14671,10 +14681,10 @@ react-native-svg@12.1.0:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
 
-react-native-swiper@^1.5.13:
-  version "1.5.14"
-  resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.5.14.tgz#1c6f949ca377186300f972bb0f30d24062c899aa"
-  integrity sha512-Kn0fxKooN7Shwu1qJYHB+Y8ssXXnvrIwReHXU5jCdyYNfz2QbBv0Cv3sa2Mqzr+XgzORCFFIokc8uCCUITDrVA==
+react-native-swiper@^1.6.0-nightly.5:
+  version "1.6.0-nightly.5"
+  resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.6.0-nightly.5.tgz#894319918ff22680c325b8052457ccf213a7c7cd"
+  integrity sha512-0siIUvD7FcGPSjRtsMyTWWmosUA+kJNT0WbJ0lf3Drp8vxeuWAg5kSmvQO+dJpISugcBWpfBc0OBDC5fBl+DsA==
   dependencies:
     prop-types "^15.5.10"
 
@@ -14684,6 +14694,11 @@ react-native-tab-view@^1.2.0, react-native-tab-view@^1.4.1:
   integrity sha512-Bke8KkDcDhvB/z0AS7MnQKMD2p6Kwfc1rSKlMOvg9CC5CnClQ2QEnhPSbwegKDYhUkBI92iH/BYy7hNSm5kbUQ==
   dependencies:
     prop-types "^15.6.1"
+
+react-native-timer@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-timer/-/react-native-timer-1.3.6.tgz#726bae63b5cc6f51a0bd3a9227e07ef0836ff350"
+  integrity sha512-/YytE7B2YrnYwqNsoQopxg3GtHwrSH/f3pP9UgpHPpJok33YkNX+sSODI6dt75/FLDKQWIYcDHLc3WkdfKKdTg==
 
 react-native-upload-aws-s3@^0.8.1:
   version "0.8.1"

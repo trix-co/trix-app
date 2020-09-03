@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Platform, StyleSheet, TouchableWithoutFeedback, Text, View } from "react-native";
+import { Platform, StyleSheet, TouchableWithoutFeedback, Text, View, ScrollView } from "react-native";
 
 import { connect } from "react-redux";
 
@@ -8,6 +8,7 @@ import { OPENING_ANIMATION_IN_PROGRESS, OPEN_AND_IDLE, DRAG_IN_PROGRESS } from "
 import Colors from "./Colors";
 import ImageGalleryImage from "./ImageGalleryImage";
 import { shallowEquals, shallowEqualsIgnoreKeys } from "./ShallowEquals";
+import Layout from "./Layout";
 
 class ImageGalleryItem extends React.Component {
     static propTypes = {
@@ -108,18 +109,19 @@ class ImageGalleryItem extends React.Component {
         if (this.state.shouldRender) {
             return (
                 <View key={index} style={[{ width }, styles.itemContainer]}>
-                    <View style={[{ width, height: width }, styles.imageContainer]}>
+                    <View style={[{ width, height: Layout.window.height }, styles.imageContainer]}>
                         {lifecycle !== OPENING_ANIMATION_IN_PROGRESS || Platform.OS === "ios"
                             ? this._renderImage()
                             : null}
                     </View>
+                    <Text>Hello!</Text>
                 </View>
             );
         } else {
             return (
                 <View key={index} style={[{ width }, styles.itemContainer]}>
                     <View style={[{ width, height: width }, styles.imageContainer]} />
-                    <View style={{ flex: 1, backgroundColor: "#fff" }} />
+                    <View style={{ flex: 1, backgroundColor: "#0d2129" }} />
                 </View>
             );
         }
@@ -145,14 +147,11 @@ export default connect((data) => ImageGalleryItem.getDataProps(data))(ImageGalle
 let styles = StyleSheet.create({
     itemContainer: {
         flex: 1,
-        backgroundColor: Colors.galleryBackground,
+        backgroundColor: "#0d2129",
     },
-    imageContainer: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#deddde",
-    },
+    imageContainer: {},
     listItemContainerStyle: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#0d2129",
     },
 });

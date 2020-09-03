@@ -26,11 +26,12 @@ let Layout = {
     statusBarHeight: 35,
     timestampWidth: 35,
     window: windowDimensions,
+    height: windowDimensions.height - (Header.HEIGHT + notchHeight + 85),
     navigationBarHeight: 44,
     softButtonHeight: 48,
     navigationBarDisplacement: 25,
 };
 
-Layout.headerHeight = Platform.OS === "android" ? Header.HEIGHT : Header.HEIGHT + notchHeight;
+Layout.headerHeight = Platform.OS === "android" ? Header.HEIGHT + notchHeight : Header.HEIGHT + notchHeight;
 
 export default Layout;

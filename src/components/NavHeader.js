@@ -53,12 +53,13 @@ export default class NavHeader extends React.Component<NavHeaderProps> {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: Platform.OS === "ios" ? 0 : 30,
         shadowColor: "black",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 1,
         borderColor: Theme.palette.borderColor,
-        borderBottomWidth: Platform.OS === "ios" ? 0 : 1,
+        borderBottomWidth: Platform.OS === "ios" ? 0 : 0,
         zIndex: 10000,
         backgroundColor: "white",
     },

@@ -1,12 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, View, ScrollView } from "react-native";
 //import CachedImage from "react-native-expo-cached-image";
 import CachedImage from "../../components/CachedImage";
 
 import ImageGalleryPlaceholder from "./ImageGalleryPlaceholder";
 import { shallowEquals } from "./ShallowEquals";
 import calculateImageDimensions from "./calculateImageDimensions";
+import Layout from "./Layout";
+
 //import { Image } from "react-native-expo-image-cache";
 
 export default class ImageGalleryImage extends React.Component {
@@ -32,9 +34,9 @@ export default class ImageGalleryImage extends React.Component {
 
         let imageStyle = {
             width,
-            height: width * 2,
+            height: width,
             opacity: isVisible ? 1 : 0,
-            borderRadius: 0.0,
+            borderRadius: 0.1,
         };
 
         if (item.get("image_url")) {
@@ -42,7 +44,7 @@ export default class ImageGalleryImage extends React.Component {
 
             let { constrainedWidth, constrainedHeight, marginHorizontal, marginVertical } = calculateImageDimensions(
                 item,
-                width
+                Layout.height
             );
 
             let imageLayout = {
@@ -76,11 +78,11 @@ export default class ImageGalleryImage extends React.Component {
             }
 
             return (
-                <View style={imageStyle}>
+                <ScrollView style={imageStyle} minimumZoomScale={1} maximumZoomScale={5}>
                     {this._maybeRenderThrobber()}
                     {coverImage}
                     {image}
-                </View>
+                </ScrollView>
             );
         } else {
             return <ImageGalleryPlaceholder style={imageStyle} />;
