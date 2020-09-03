@@ -26,7 +26,7 @@ export default class CachedImage extends Component {
 
     async getImageFilesystemKey(remoteURI) {
         const hashed = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, remoteURI);
-        return `${FileSystem.cacheDirectory}${hashed}`;
+        return `${FileSystem.cacheDirectory}${hashed}.jpg`;
     }
 
     async loadImage(filesystemURI, remoteURI) {
