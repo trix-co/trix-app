@@ -62,10 +62,10 @@ export default function Phone() {
                                     verificationCode
                                 );
                                 const user = await firebase.auth().signInWithCredential(credential);
-                                console.log("Phone sign-up successful 👍");
+                                console.log("Phone login successful 👍");
                                 navigation.navigate("Home");
                             } catch (err) {
-                                alert(`Error: ${err.message}`);
+                                alert(`Error: code not accepted as valid. Please try again.`);
                             }
                         }}
                     />

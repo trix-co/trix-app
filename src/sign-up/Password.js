@@ -76,7 +76,7 @@ export default function Phone() {
                                 await Firebase.firestore.collection("users").doc(user.user.uid).set(profile);
                                 console.log("Phone sign-up successful 👍");
                             } catch (err) {
-                                alert(`Error: ${err.message}`);
+                                alert(`Error: code not accepted as valid. Please try again.`);
                             }
                         }}
                     />
