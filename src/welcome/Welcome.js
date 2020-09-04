@@ -24,10 +24,13 @@ export default class Welcome extends React.Component<ScreenProps<>> {
                 <Image source={require("../../assets/trix_logo.png")} style={styles.logo} />
                 <View style={styles.txtContainer}>
                     <Text style={styles.txt}>
-                        <Text>trix is a </Text>
-                        <Text style={{ fontWeight: "bold" }}>photo-sharing app </Text>
-                        <Text>on a mission to </Text>
-                        <Text style={{ fontWeight: "bold" }}>secure the digital identity and privacy of its users</Text>
+                        <Text style={{ fontWeight: "bold", color: Theme.palette.secondary }}>
+                            digital privacy is a human right.
+                        </Text>
+                        <Text>
+                            {"\n\n"}trix is a new kind of camera app that helps users prevent facial recognition and
+                            other unwanted use of their data.
+                        </Text>
                     </Text>
                 </View>
                 <AnimatedView style={styles.container} delay={400} duration={300}>

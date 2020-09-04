@@ -67,13 +67,6 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         );
     }
 
-    @autobind
-    async flashScreen(): Promise<void> {
-        this.setState({ flashScreen: true }, () =>
-            timer.setTimeout(this, "hideFlash", () => this.setState({ flashScreen: false }), 50)
-        );
-    }
-
     async componentDidMount(): Promise<void> {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({
@@ -149,8 +142,9 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     async snap(): Promise<void> {
         const { navigation } = this.props;
         try {
-            this.setState({ loading: true });
             const picture = await this.camera.current.takePictureAsync({ base64: false, skipProcessing: true });
+            this.camera.current.pausePreview();
+            this.setState({ loading: true });
 
             await this.upload(picture);
             const { uid } = Firebase.auth.currentUser;
@@ -165,9 +159,9 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
             };
             //console.log(post);
             //await Firebase.firestore.collection("nativepics").doc(this.id).set(post);
-            await this.flashScreen();
             await this.enque(post);
             this.setState({ loading: false });
+            this.camera.current.resumePreview();
             await this.showMsg();
         } catch (e) {
             this.setState({ loading: false });

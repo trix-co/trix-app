@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import { StyleSheet, TouchableWithoutFeedback, SafeAreaView, View } from "react-native";
-import { AntDesign as Icon } from "@expo/vector-icons";
+import { Feather as Icon } from "@expo/vector-icons";
 
 import { Theme } from "../components";
 
@@ -11,9 +11,8 @@ type Tab = { label: string, icon: string };
 
 export class HomeTab extends React.Component<NavigationProps<*>> {
     static tabs: Tab[] = [
-        { label: "Explore", icon: "home" },
-        { label: "PhotoLib", icon: "picture" },
-        { label: "Share", icon: "camerao" },
+        { label: "Share", icon: "camera" },
+        { label: "PhotoLib", icon: "layers" },
         { label: "Profile", icon: "user" },
     ];
 

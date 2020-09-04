@@ -33,7 +33,7 @@ export default class ImageGalleryHeaderBar extends React.Component {
                 Share.share(
                     {
                         url: localURI,
-                        title: "test lol",
+                        title: "Image from Trix.co",
                     },
                     { UTI: "public.jpeg" }
                 );
@@ -125,7 +125,7 @@ let styles = StyleSheet.create({
     },
     headeBarTitleText: {
         color: Colors.barTitle,
-        fontFamily: "Ubuntu-Medium",
+        fontFamily: "Segoe-UI-Bold",
         fontSize: 18,
         paddingTop: 2,
         color: "#0f5257",
