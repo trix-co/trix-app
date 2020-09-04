@@ -52,6 +52,12 @@ const UbuntuMedium = require("./assets/fonts/Ubuntu-Medium.ttf");
 // $FlowFixMe
 const UbuntuLight = require("./assets/fonts/Ubuntu-Light.ttf");
 
+const SegoeUI = require("./assets/fonts/Segoe-UI.ttf");
+// $FlowFixMe
+const SegoeUIBold = require("./assets/fonts/Segoe-UI-Bold.ttf");
+// $FlowFixMe
+const SegoeUIItalic = require("./assets/fonts/Segoe-UI-Italic.ttf");
+
 useStrict(true);
 
 const originalSend = XMLHttpRequest.prototype.send;
@@ -108,6 +114,9 @@ class Loading extends React.Component<ScreenProps<>> {
         try {
             const images = Images.downloadAsync();
             const fonts = Font.loadAsync({
+                "Segoe-UI-Bold": SegoeUIBold,
+                "Segoe-UI-Italic": SegoeUIItalic,
+                "Segoe-UI": SegoeUI,
                 "Ubuntu-Bold": UbuntuBold,
                 "Ubuntu-BoldItalic": UbuntuBoldItalic,
                 "Ubuntu-Regular": Ubuntu,
@@ -192,16 +201,15 @@ const ShareNavigator = createStackNavigator(
 
 const HomeTabs = createBottomTabNavigator(
     {
-        Explore: { screen: ExploreNavigator },
-        PhotoLib: { screen: PhotoLib },
         Share: { screen: ShareNavigator },
+        PhotoLib: { screen: PhotoLib },
         Profile: { screen: ProfileNavigator },
     },
     {
         animationEnabled: true,
         tabBarComponent: HomeTab,
         tabBarPosition: "bottom",
-        swipeEnabled: false,
+        swipeEnabled: true,
     }
 );
 

@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
         width: 35,
     },
     text: {
-        fontFamily: "Ubuntu-Medium",
+        fontFamily: "Segoe-UI-Bold",
+        fontWeight: "bold",
         fontSize: 18,
         paddingTop: 3,
         color: Theme.palette.secondary,

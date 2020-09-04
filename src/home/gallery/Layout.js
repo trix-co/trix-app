@@ -32,6 +32,6 @@ let Layout = {
     navigationBarDisplacement: 25,
 };
 
-Layout.headerHeight = Platform.OS === "android" ? Header.HEIGHT + notchHeight : Header.HEIGHT + notchHeight;
+Layout.headerHeight = Platform.OS === "android" ? Header.HEIGHT + notchHeight + 20 : Header.HEIGHT + notchHeight;
 
 export default Layout;

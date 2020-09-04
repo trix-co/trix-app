@@ -67,37 +67,37 @@ const theme: Theme = {
         header1: {
             fontSize: 48,
             lineHeight: 58,
-            fontFamily: "Ubuntu-Bold",
+            fontFamily: "Segoe-UI-Bold",
         },
         header2: {
             fontSize: 36,
             lineHeight: 43,
-            fontFamily: "Ubuntu-Bold",
+            fontFamily: "Segoe-UI-Bold",
         },
         header3: {
             fontSize: 24,
             lineHeight: 28,
-            fontFamily: "Ubuntu-Bold",
+            fontFamily: "Segoe-UI-Bold",
         },
         large: {
             fontSize: 14,
             lineHeight: 21,
-            fontFamily: "Ubuntu-Bold",
+            fontFamily: "Segoe-UI-Bold",
         },
         regular: {
             fontSize: 14,
             lineHeight: 21,
-            fontFamily: "Ubuntu-Medium",
+            fontFamily: "SFProText-Medium",
         },
         small: {
             fontSize: 14,
             lineHeight: 18,
-            fontFamily: "Ubuntu-Regular",
+            fontFamily: "Segoe-UI",
         },
         micro: {
             fontSize: 8,
             lineHeight: 8,
-            fontFamily: "Ubuntu-Bold",
+            fontFamily: "Segoe-UI-Bold",
         },
     },
     spacing: {

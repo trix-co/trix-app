@@ -1,13 +1,15 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import { View, StyleSheet, SafeAreaView, StatusBar, Platform } from "react-native";
+import { View, StyleSheet, SafeAreaView, StatusBar, Platform, Image } from "react-native";
 import Swiper from "react-native-swiper";
 
 import Slide from "./Slide";
 import Connect from "./Connect";
 import Chat from "./Chat";
 import Share from "./Share";
+import { Feather as Icon } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 import { Button, Theme } from "../components";
 import type { ScreenProps } from "../components/Types";
@@ -51,7 +53,7 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         return (
             <SafeAreaView style={styles.footer}>
                 <Button label="Back" onPress={back} disabled={isFirst} />
-                <Button label={isLast ? "Start" : "Next"} onPress={next} primary transparent />
+                <Button label={isLast ? "Use Trix Now" : "Next"} onPress={next} primary transparent />
             </SafeAreaView>
         );
     }
@@ -82,25 +84,28 @@ let share: Share;
 
 const slides = [
     {
-        title: "Connect",
-        description: "Bring your friends closer by building a network of the people you love.",
-        icon: <Connect ref={(ref) => (ref ? (connect = ref) : undefined)} />,
-        show: () => connect.show(),
-        hide: () => connect.hide(),
+        title: "Welcome!",
+        description:
+            "Thank you for signing up with Trix. \n\nTrix's technology helps prevent facial recognition from working on your photos.",
+        icon: <Image source={require("../../assets/app.png")} style={{ height: 200, width: 200 }} />,
+        show: () => {},
+        hide: () => {},
     },
     {
-        title: "Chat",
-        description: "Send messages and stay up to date with friends whenever you need to.",
-        icon: <Chat ref={(ref) => (ref ? (chat = ref) : undefined)} />,
-        show: () => chat.show(),
-        hide: () => chat.hide(),
+        title: "Snap a photo",
+        description:
+            "All photos in Trix are automatically processed with our protective filter to help prevent facial recognition. \n\nThe more Trix-processed photos you upload to social apps & sites, the more effective the technology is.",
+        icon: <FontAwesome name="camera-retro" style={{ color: "white" }} size={130} />,
+        show: () => {},
+        hide: () => {},
     },
     {
-        title: "Share",
-        description: "Send your best selfies and show friends what you’re up to.",
-        icon: <Share ref={(ref) => (ref ? (share = ref) : undefined)} />,
-        show: () => share.show(),
-        hide: () => share.hide(),
+        title: "Worth the wait",
+        description:
+            "Trix's protective filter runs in the background after you take or upload a photo. \n\nWithin a few minutes protected photos will automatically appear in the app.",
+        icon: <FontAwesome name="shield" style={{ color: "white" }} size={150} />,
+        show: () => {},
+        hide: () => {},
     },
 ];
 
@@ -109,5 +114,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginHorizontal: Theme.spacing.base,
+    },
+    welcome: {
+        color: "white",
     },
 });
