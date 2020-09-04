@@ -1,7 +1,7 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import { StyleSheet, View, TouchableWithoutFeedback, Image } from "react-native";
+import { StyleSheet, View, TouchableWithoutFeedback, Image, StatusBar } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Content } from "native-base";
 import { Feather as Icon } from "@expo/vector-icons";
@@ -117,15 +117,16 @@ export default class Settings extends React.Component<ScreenParams<{ profile: Pr
         }
         return (
             <View style={styles.container}>
+                <StatusBar barStyle="light-content" />
                 <NavHeader title="Settings" back {...{ navigation }} />
                 <Content style={styles.content}>
                     <View style={styles.avatarContainer}>
-                        <TouchableWithoutFeedback onPress={this.setPicture}>
-                            <View style={styles.avatar}>
-                                <Image style={styles.profilePic} source={{ uri: picture.uri }} />
-                                <Icon name="camera" size={25} color="white" style={styles.editIcon} />
-                            </View>
-                        </TouchableWithoutFeedback>
+                        {/* <TouchableWithoutFeedback onPress={this.setPicture}> */}
+                        <View style={styles.avatar}>
+                            <Image style={styles.profilePic} source={{ uri: picture.uri }} />
+                            {/* <Icon name="camera" size={25} color="white" style={styles.editIcon} /> */}
+                        </View>
+                        {/* </TouchableWithoutFeedback> */}
                     </View>
                     <TextField
                         placeholder="Name"

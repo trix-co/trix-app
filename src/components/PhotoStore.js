@@ -33,7 +33,7 @@ export default class PhotoStore {
     }
 
     async checkForNewEntriesInFeed(): Promise<void> {
-        console.log("running it!");
+        //console.log("running it!");
         if (this.lastKnownEntry) {
             console.log("1");
             const snap = await this.query.endBefore(this.lastKnownEntry).get();
@@ -55,6 +55,8 @@ export default class PhotoStore {
             console.log("size: ", Object.keys(posts).length);
             // eslint-disable-next-line prefer-destructuring
             this.lastKnownEntry = snap.docs[0];
+        } else {
+            await this.loadFeed();
         }
     }
 

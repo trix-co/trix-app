@@ -1,9 +1,9 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import { TextInput } from "react-native";
+import { TextInput, Linking, Text } from "react-native";
 
-import { TextField } from "../components";
+import { TextField, Theme } from "../components";
 import type { NavigationProps } from "../components/Types";
 
 import SignUpStore from "./SignUpStore";
@@ -78,6 +78,23 @@ export default class Name extends React.Component<NavigationProps<*>, NameState>
                     onSubmitEditing={this.next}
                     onChangeText={this.setLastName}
                 />
+                <Text>
+                    By creating an account you acknowledge that you have read and agree to our{" "}
+                    <Text
+                        style={{ color: Theme.palette.primary }}
+                        onPress={() => Linking.openURL("https://trix.co/terms")}
+                    >
+                        Terms of Service
+                    </Text>{" "}
+                    &{" "}
+                    <Text
+                        style={{ color: Theme.palette.primary }}
+                        onPress={() => Linking.openURL("https://trix.co/privacy")}
+                    >
+                        Privacy Policy
+                    </Text>{" "}
+                    {"\n"}
+                </Text>
             </SignUpContainer>
         );
     }
