@@ -10,9 +10,10 @@ import {
     View,
     ScrollView,
     StatusBar,
+    Text,
 } from "react-native";
 
-import { Feather as Icon } from "@expo/vector-icons";
+import { Feather as Icon, FontAwesome } from "@expo/vector-icons";
 
 import ImageGallery, { openImageGallery } from "./gallery";
 import type { Profile } from "../../components/Model";
@@ -87,21 +88,43 @@ class ListItem extends React.Component<InjectedProps> {
 @inject("photoStore")
 @observer
 class ImageGrid extends React.Component<InjectedProps> {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isEmpty: true,
+        };
+    }
+
     componentDidMount() {
         this.loadFeed();
     }
-    loadFeed = () => this.props.photoStore.checkForNewEntriesInFeed();
+
+    loadFeed = () => {
+        this.props.photoStore
+            .checkForNewEntriesInFeed()
+            .then(this.setState({ isEmpty: this.props.photoStore.feed.length === 0 }));
+    };
     render() {
         const feed = this.props.photoStore.feed;
         return (
             <View style={styles.imagegrid}>
                 <NavigationEvents onWillFocus={this.loadFeed} />
                 <NavHeader title="Photos" />
-                <ScrollView contentContainerStyle={styles.layout} minimumZoomScale={1} maximumZoomScale={5}>
-                    {feed.map((item) => (
-                        <ListItem key={item.imageUrl} item={item} />
-                    ))}
-                </ScrollView>
+                {this.state.isEmpty ? (
+                    <View style={styles.emptystate}>
+                        <FontAwesome name="file-picture-o" style={{ color: Theme.palette.secondary }} size={75} />
+                        <Text style={styles.emptystateText}>
+                            Snap or import a photo to protect it from facial recognition.
+                        </Text>
+                    </View>
+                ) : (
+                    <ScrollView contentContainerStyle={styles.layout} minimumZoomScale={1} maximumZoomScale={5}>
+                        {feed.map((item) => (
+                            <ListItem key={item.imageUrl} item={item} />
+                        ))}
+                    </ScrollView>
+                )}
             </View>
         );
     }
@@ -121,7 +144,7 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
     };
 
     @autobind
-    async enque(post: NativePicture): Promise<void> {
+    async enque(post: NativePicture): c {
         try {
             //cfg = AWS.config.loadFromPath("./aws_config.json");
             const sqs = new AWS.SQS();
@@ -220,6 +243,7 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
             region: "us-west-2",
         });
         const { hasCameraPermission, loading, ratio, showMsg } = this.state;
+
         return (
             <View style={styles.container}>
                 <ImageGrid />
@@ -297,6 +321,17 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         justifyContent: "center",
         alignItems: "center",
+    },
+    emptystate: {
+        flex: 1,
+        margin: 30,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    emptystateText: {
+        paddingTop: 10,
+        fontSize: 22,
+        color: Theme.palette.secondary,
     },
 });
 

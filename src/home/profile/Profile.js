@@ -3,7 +3,16 @@ import autobind from "autobind-decorator";
 import moment from "moment";
 import _ from "lodash";
 import * as React from "react";
-import { View, StyleSheet, Dimensions, TouchableOpacity, Image, Linking, TouchableHighlight } from "react-native";
+import {
+    View,
+    StyleSheet,
+    Dimensions,
+    TouchableOpacity,
+    Image,
+    Linking,
+    TouchableHighlight,
+    StatusBar,
+} from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 import { inject, observer } from "mobx-react/native";
 import Constants from "expo-constants";
@@ -24,10 +33,18 @@ type InjectedProps = {
 @observer
 export default class ProfileComp extends React.Component<ScreenProps<> & InjectedProps> {
     componentDidMount() {
+        StatusBar.setBarStyle("light-content");
         this.loadFeed();
     }
 
-    loadFeed = () => this.props.photoStore.checkForNewEntriesInFeed();
+    loadFeed = () => {
+        StatusBar.setBarStyle("light-content");
+        this.props.photoStore.checkForNewEntriesInFeed();
+    };
+
+    dismount = () => {
+        StatusBar.setBarStyle("dark-content");
+    };
 
     @autobind
     settings() {
@@ -58,7 +75,7 @@ export default class ProfileComp extends React.Component<ScreenProps<> & Injecte
         //console.log("NumImagesTotal:", photoStore.feed.length);
         return (
             <View style={styles.container}>
-                <NavigationEvents onWillFocus={this.loadFeed} />
+                <NavigationEvents onWillFocus={this.loadFeed} onWillBlur={this.dismount} />
                 <View style={styles.header}>
                     <Image style={styles.cover} source={Images.cover} />
                     <TouchableOpacity onPress={this.settings} style={styles.settings}>
@@ -75,7 +92,7 @@ export default class ProfileComp extends React.Component<ScreenProps<> & Injecte
                 </View>
                 <View style={styles.processedImages}>
                     <Text>
-                        <Text style={styles.processedText}>Images processed this month: </Text>
+                        <Text style={styles.processedText}>Photos protected this month: </Text>
                         <Text style={styles.processedTextBold}>{imagesProcessedThisMonth.length}</Text>
                     </Text>
                     <Text style={{ paddingTop: 20 }}>
@@ -84,8 +101,8 @@ export default class ProfileComp extends React.Component<ScreenProps<> & Injecte
                     </Text>
                     <View style={{ paddingTop: 30, flexDirection: "row", flexWrap: 1 }}>
                         <Text style={styles.emailText}>
-                            We're hard at work on additional features to help you protect your digital identity. Want to
-                            see something built?
+                            We're working on more features to help you protect your digital identity. Want to see
+                            something built?
                         </Text>
                         <TouchableOpacity onPress={() => Linking.openURL(url)} activeOpacity={1}>
                             <Text style={styles.emailTextLink}>Send us a text.</Text>

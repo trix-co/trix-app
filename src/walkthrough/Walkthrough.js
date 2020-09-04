@@ -84,10 +84,10 @@ let share: Share;
 
 const slides = [
     {
-        title: "Welcome!",
+        title: "You're in",
         description:
-            "Thank you for signing up with Trix. \n\nTrix's technology helps prevent facial recognition from working on your photos.",
-        icon: <Image source={require("../../assets/app.png")} style={{ height: 200, width: 200 }} />,
+            "Thanks for signing up for Trix! \n\nTrix's technology helps prevent facial recognition from working on your photos.",
+        icon: <Image source={require("../../assets/trix_white.png")} style={{ height: 80, width: 250 }} />,
         show: () => {},
         hide: () => {},
     },
