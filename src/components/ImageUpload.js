@@ -2,6 +2,7 @@
 import * as ImageManipulator from "expo-image-manipulator";
 import { RNS3 } from "react-native-aws3";
 import Firebase from "./Firebase";
+import { Platform } from "react-native";
 
 export type Picture = {
     uri: string,
@@ -28,6 +29,9 @@ export default class ImageUpload {
     }
 
     static async upload(ogPic: Picture): Promise<string> {
+        if (Platform.OS === "android") {
+            console.log("droidpic", ogPic.width, ogPic.height);
+        }
         const picture = await ImageManipulator.manipulateAsync(
             ogPic.uri,
             [{ resize: { width: 1600, height: 1600 * (ogPic.height / ogPic.width) } }],

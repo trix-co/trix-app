@@ -53,7 +53,7 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         return (
             <SafeAreaView style={styles.footer}>
                 <Button label="Back" onPress={back} disabled={isFirst} />
-                <Button label={isLast ? "Use Trix Now" : "Next"} onPress={next} primary transparent />
+                <Button label={isLast ? "Start" : "Next"} onPress={next} primary transparent />
             </SafeAreaView>
         );
     }

@@ -12,6 +12,7 @@ import {
     Linking,
     TouchableHighlight,
     StatusBar,
+    Platform,
 } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 import { inject, observer } from "mobx-react/native";
@@ -33,17 +34,23 @@ type InjectedProps = {
 @observer
 export default class ProfileComp extends React.Component<ScreenProps<> & InjectedProps> {
     componentDidMount() {
-        StatusBar.setBarStyle("light-content");
+        if (Platform.OS === "ios") {
+            StatusBar.setBarStyle("light-content");
+        }
         this.loadFeed();
     }
 
     loadFeed = () => {
-        StatusBar.setBarStyle("light-content");
+        if (Platform.OS === "ios") {
+            StatusBar.setBarStyle("light-content");
+        }
         this.props.photoStore.checkForNewEntriesInFeed();
     };
 
     dismount = () => {
-        StatusBar.setBarStyle("dark-content");
+        if (Platform.OS === "ios") {
+            StatusBar.setBarStyle("dark-content");
+        }
     };
 
     @autobind
@@ -99,7 +106,7 @@ export default class ProfileComp extends React.Component<ScreenProps<> & Injecte
                         <Text style={styles.processedText}>Account type: </Text>
                         <Text style={styles.processedTextBold}>Free</Text>
                     </Text>
-                    <View style={{ paddingTop: 30, flexDirection: "row", flexWrap: 1 }}>
+                    <View style={{ paddingTop: 30, flexDirection: "row", flexWrap: "wrap" }}>
                         <Text style={styles.emailText}>
                             We're working on more features to help you protect your digital identity. Want to see
                             something built?
