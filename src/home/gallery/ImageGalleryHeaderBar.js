@@ -125,9 +125,11 @@ let styles = StyleSheet.create({
     },
     headeBarTitleText: {
         color: Colors.barTitle,
-        fontFamily: "Segoe-UI-Bold",
+        fontWeight: "bold",
+        fontFamily: Platform.OS === "android" ? "SFProText-Bold" : "Segoe-UI-Bold",
         fontSize: 18,
-        paddingTop: 2,
+        paddingTop: Platform.OS === "android" ? 0 : 2,
+        paddingBottom: Platform.OS === "android" ? 10 : 0,
         color: "#0f5257",
     },
     headerBarButtonText: {
@@ -142,7 +144,7 @@ let styles = StyleSheet.create({
         //justifyContent: "center",
     },
     back: {
-        paddingTop: 34,
+        paddingTop: Platform.OS === "android" ? 26 : 34,
         marginLeft: 8,
         position: "absolute",
         //paddingEnd: Theme.spacing.tiny,

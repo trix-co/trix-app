@@ -1,8 +1,8 @@
 {
     "expo": {
         "name": "trix-app",
-        "version": "1.1.7",
-        "description": "trix is a photo app on a mission to protect the digital identity and privacy of our users",
+        "version": "0.1.0",
+        "description": "trix is a new kind of camera app that helps prevent facial recognition and other unwanted use of their data",
         "orientation": "portrait",
         "privacy": "public",
         "icon": "./assets/app.png",
@@ -19,7 +19,7 @@
         },
         "ios": {
             "bundleIdentifier": "com.dfeld.trix",
-            "buildNumber": "2"
+            "buildNumber": "1"
         },
         "android": {
             "package": "com.dfeld.trix"

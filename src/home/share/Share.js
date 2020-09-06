@@ -20,6 +20,7 @@ import EnableCameraPermission from "./EnableCameraPermission";
 import FlashIcon from "./FlashIcon";
 import AWS from "aws-sdk";
 const timer = require("react-native-timer");
+import { NavigationEvents } from "react-navigation";
 
 import {
     RefreshIndicator,
@@ -55,6 +56,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         flashMode: Camera.Constants.FlashMode.off,
         autoFocus: Camera.Constants.AutoFocus.on,
         loading: false,
+        loaded: true,
         ratio: undefined,
         showMsg: false,
         flashScreen: false,
@@ -142,7 +144,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     async snap(): Promise<void> {
         const { navigation } = this.props;
         try {
-            const picture = await this.camera.current.takePictureAsync({ base64: false, skipProcessing: true });
+            const picture = await this.camera.current.takePictureAsync({ base64: false, skipProcessing: false });
             this.camera.current.pausePreview();
             this.setState({ loading: true });
 
@@ -196,29 +198,35 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         }
         return (
             <View style={styles.container}>
+                <NavigationEvents
+                    onWillFocus={(payload) => this.setState({ loaded: true })}
+                    onDidBlur={(payload) => this.setState({ loaded: false })}
+                />
                 <NavHeader title="Camera" {...{ navigation }} />
 
-                <Camera
-                    ref={this.camera}
-                    style={{ width, height: cameraHeight, flexGrow: 1 }}
-                    {...{ type, flashMode, onCameraReady, ratio, autoFocus }}
-                >
-                    <View style={styles.cameraBtns}>
-                        <TouchableWithoutFeedback onPress={this.toggleFlash}>
-                            <View>
-                                <FlashIcon on={flashMode === Camera.Constants.FlashMode.on} />
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableOpacity onPress={this.snap}>
-                            <View style={styles.btn} />
-                        </TouchableOpacity>
-                        <TouchableWithoutFeedback onPress={this.toggleCamera}>
-                            <View>
-                                <Icon name="rotate-ccw" style={styles.rotate} size={25} />
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </View>
-                </Camera>
+                {this.state.loaded && (
+                    <Camera
+                        ref={this.camera}
+                        style={{ width, height: cameraHeight, flexGrow: 1 }}
+                        {...{ type, flashMode, onCameraReady, ratio, autoFocus }}
+                    >
+                        <View style={styles.cameraBtns}>
+                            <TouchableWithoutFeedback onPress={this.toggleFlash}>
+                                <View>
+                                    <FlashIcon on={flashMode === Camera.Constants.FlashMode.on} />
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableOpacity onPress={this.snap}>
+                                <View style={styles.btn} />
+                            </TouchableOpacity>
+                            <TouchableWithoutFeedback onPress={this.toggleCamera}>
+                                <View>
+                                    <Icon name="rotate-ccw" style={styles.rotate} size={25} />
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </Camera>
+                )}
                 <Modal transparent visible={loading} onRequestClose={this.toggle}>
                     <View style={styles.modal}>
                         <SpinningIndicator />
