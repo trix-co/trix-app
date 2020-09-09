@@ -18,7 +18,6 @@ import { Feather as Icon } from "@expo/vector-icons";
 
 import EnableCameraPermission from "./EnableCameraPermission";
 import FlashIcon from "./FlashIcon";
-import AWS from "aws-sdk";
 const timer = require("react-native-timer");
 import { NavigationEvents } from "react-navigation";
 
@@ -78,8 +77,9 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
 
     onCameraReady = async () => {
         if (Platform.OS === "android") {
-            const DESIRED_RATIO = "1:1";
+            const DESIRED_RATIO = "5:3";
             const ratios = await this.camera.current.getSupportedRatiosAsync();
+            console.log("hooligan", ratios);
             const ratio = ratios.find((r) => r === DESIRED_RATIO) || ratios[ratios.length - 1];
             this.setState({ ratio });
         }
@@ -107,22 +107,18 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     @autobind
     async enque(post: NativePicture): Promise<void> {
         try {
-            //cfg = AWS.config.loadFromPath("./aws_config.json");
-            const sqs = new AWS.SQS();
-            const params = {
-                MessageBody: JSON.stringify(post),
-                QueueUrl: `https://sqs.us-west-2.amazonaws.com/556949768387/Trix-Messages`,
-            };
-            mess = sqs.sendMessage(params, function (err, data) {
-                if (err) console.log(err, err.stack);
-                // an error occurred
-                //else console.log(data); // successful response
+            const resp = await fetch("https://ee5s4vrbxh.execute-api.us-west-2.amazonaws.com/api", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(post),
             });
-            //console.log(mess);
+            //console.log(JSON.stringify(resp));
         } catch (e) {
             // eslint-disable-next-line no-console
-            console.error(e);
-            Alert.alert(e);
+            console.log(serializeException(e));
         }
     }
 
@@ -135,8 +131,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
             this.url = await ImageUpload.upload(picture);
         } catch (e) {
             // eslint-disable-next-line no-console
-            console.error(e);
-            Alert.alert(e);
+            console.log(serializeException(e));
         }
     }
 
@@ -169,16 +164,11 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
             this.setState({ loading: false });
             console.log("something went wrong!", e);
             // eslint-disable-next-line no-alert
-            alert(serializeException(e));
+            //alert(serializeException(e));
         }
     }
 
     render(): React.Node {
-        AWS.config.update({
-            accessKeyId: "AKIAIEKR7PR447THZZMA",
-            secretAccessKey: "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",
-            region: "us-west-2",
-        });
         const { onCameraReady } = this;
         const { navigation } = this.props;
         const { hasCameraPermission, type, flashMode, loading, ratio, autoFocus, showMsg, flashScreen } = this.state;
@@ -207,7 +197,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
                 {this.state.loaded && (
                     <Camera
                         ref={this.camera}
-                        style={{ width, height: cameraHeight, flexGrow: 1 }}
+                        style={{ flexGrow: 1 }}
                         {...{ type, flashMode, onCameraReady, ratio, autoFocus }}
                     >
                         <View style={styles.cameraBtns}>

@@ -79,21 +79,22 @@ if (!console.ignoredYellowBox) {
 // $FlowFixMe
 console.ignoredYellowBox.push("Setting a timer");
 
-@inject("profileStore", "feedStore", "userFeedStore", "photoStore")
+//@inject("profileStore", "feedStore", "userFeedStore", "photoStore")
+@inject("profileStore", "photoStore")
 class Loading extends React.Component<ScreenProps<>> {
     async componentDidMount(): Promise<void> {
-        const { navigation, profileStore, feedStore, userFeedStore, photoStore } = this.props;
+        const { navigation, profileStore, photoStore } = this.props;
         await Loading.loadStaticResources();
         Firebase.init();
         Firebase.auth.onAuthStateChanged((user) => {
             const isUserAuthenticated = !!user;
             if (isUserAuthenticated) {
                 const { uid } = Firebase.auth.currentUser;
-                const feedQuery = Firebase.firestore.collection("feed").orderBy("timestamp", "desc");
-                const userFeedQuery = Firebase.firestore
-                    .collection("feed")
-                    .where("uid", "==", uid)
-                    .orderBy("timestamp", "desc");
+                // const feedQuery = Firebase.firestore.collection("feed").orderBy("timestamp", "desc");
+                // const userFeedQuery = Firebase.firestore
+                //     .collection("feed")
+                //     .where("uid", "==", uid)
+                //     .orderBy("timestamp", "desc");
                 const photoQuery = Firebase.firestore
                     .collection("trixpix")
                     .where("uid", "==", uid)
@@ -101,8 +102,8 @@ class Loading extends React.Component<ScreenProps<>> {
 
                 photoStore.init(photoQuery);
                 profileStore.init();
-                feedStore.init(feedQuery);
-                userFeedStore.init(userFeedQuery);
+                //feedStore.init(feedQuery);
+                //userFeedStore.init(userFeedQuery);
                 navigation.navigate("Home");
             } else {
                 navigation.navigate("Welcome");
@@ -144,8 +145,8 @@ class Loading extends React.Component<ScreenProps<>> {
 // eslint-disable-next-line react/no-multi-comp
 export default class App extends React.Component<{}> {
     profileStore = new ProfileStore();
-    feedStore = new FeedStore();
-    userFeedStore = new FeedStore();
+    //feedStore = new FeedStore();
+    //userFeedStore = new FeedStore();
     photoStore = new PhotoStore();
 
     componentDidMount() {
@@ -156,10 +157,11 @@ export default class App extends React.Component<{}> {
     }
 
     render(): React.Node {
-        const { feedStore, profileStore, userFeedStore, photoStore } = this;
+        //const { feedStore, profileStore, userFeedStore, photoStore } = this;
+        const { profileStore, photoStore } = this;
         return (
             <StyleProvider style={getTheme(variables)}>
-                <Provider {...{ feedStore, profileStore, userFeedStore, photoStore }}>
+                <Provider {...{ profileStore, photoStore }}>
                     <AppNavigator onNavigationStateChange={() => undefined} />
                 </Provider>
             </StyleProvider>

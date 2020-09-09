@@ -26,7 +26,11 @@ let Layout = {
     statusBarHeight: 35,
     timestampWidth: 35,
     window: windowDimensions,
-    height: windowDimensions.height - (Header.HEIGHT + notchHeight + 85),
+    height:
+        // Platform.OS === "android"
+        //     ? windowDimensions.height - (Header.HEIGHT + notchHeight + 60)
+        //     :
+        windowDimensions.height - (Header.HEIGHT + notchHeight + 85),
     navigationBarHeight: 44,
     softButtonHeight: 48,
     navigationBarDisplacement: 25,

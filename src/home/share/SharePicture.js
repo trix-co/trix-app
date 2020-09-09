@@ -4,7 +4,6 @@ import autobind from "autobind-decorator";
 import * as React from "react";
 import { StyleSheet, TextInput, Image, Dimensions, View, Alert } from "react-native";
 import { Content } from "native-base";
-import AWS from "aws-sdk";
 
 import {
     NavHeader,
@@ -41,18 +40,14 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
     @autobind
     async enque(post: NativePicture): Promise<void> {
         try {
-            //cfg = AWS.config.loadFromPath("./aws_config.json");
-            const sqs = new AWS.SQS();
-            const params = {
-                MessageBody: JSON.stringify(post),
-                QueueUrl: `https://sqs.us-west-2.amazonaws.com/556949768387/Trix-Messages`,
-            };
-            mess = sqs.sendMessage(params, function (err, data) {
-                if (err) console.log(err, err.stack);
-                // an error occurred
-                //else console.log(data); // successful response
+            const resp = await fetch("https://ee5s4vrbxh.execute-api.us-west-2.amazonaws.com/api", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(post),
             });
-            //console.log(mess);
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error(e);
@@ -113,11 +108,6 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
         const { navigation } = this.props;
         const { loading } = this.state;
         const source = navigation.state.params;
-        AWS.config.update({
-            accessKeyId: "AKIAIEKR7PR447THZZMA",
-            secretAccessKey: "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",
-            region: "us-west-2",
-        });
         if (loading) {
             return (
                 <View style={styles.loading}>

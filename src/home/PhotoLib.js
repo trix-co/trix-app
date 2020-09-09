@@ -98,13 +98,19 @@ class ImageGrid extends React.Component<InjectedProps> {
 
     componentDidMount() {
         this.loadFeed();
+        this.loadFeedEveryMinute();
     }
+
+    loadFeedEveryMinute = () => {
+        timer.setInterval(this, "loadFeedEveryMin", () => this.loadFeed(), 30000);
+    };
 
     loadFeed = () => {
         this.props.photoStore
             .checkForNewEntriesInFeed()
             .then(this.setState({ isEmpty: this.props.photoStore.feed.length === 0 }));
     };
+
     render() {
         const feed = this.props.photoStore.feed;
         return (
@@ -146,18 +152,14 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
     @autobind
     async enque(post: NativePicture): c {
         try {
-            //cfg = AWS.config.loadFromPath("./aws_config.json");
-            const sqs = new AWS.SQS();
-            const params = {
-                MessageBody: JSON.stringify(post),
-                QueueUrl: `https://sqs.us-west-2.amazonaws.com/556949768387/Trix-Messages`,
-            };
-            sqs.sendMessage(params, function (err, data) {
-                if (err) console.log(err, err.stack);
-                // an error occurred
-                else console.log(data); // successful response
+            const resp = await fetch("https://ee5s4vrbxh.execute-api.us-west-2.amazonaws.com/api", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(post),
             });
-            //console.log(mess);
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error(e);
@@ -237,11 +239,6 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
     }
 
     render() {
-        AWS.config.update({
-            accessKeyId: "AKIAIEKR7PR447THZZMA",
-            secretAccessKey: "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",
-            region: "us-west-2",
-        });
         const { hasCameraPermission, loading, ratio, showMsg } = this.state;
 
         return (

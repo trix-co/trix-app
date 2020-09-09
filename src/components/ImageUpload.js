@@ -1,7 +1,6 @@
 // @flow
 import * as ImageManipulator from "expo-image-manipulator";
 import { RNS3 } from "react-native-aws3";
-import Firebase from "./Firebase";
 import { Platform } from "react-native";
 
 export type Picture = {
@@ -45,24 +44,43 @@ export default class ImageUpload {
             type: "image/jpeg",
         };
 
-        const options = {
-            keyPrefix: "unprocessed/",
-            bucket: "trix",
-            region: "us-west-2",
-            awsUrl: "sfo2.digitaloceanspaces.com",
-            accessKey: "EASSTJ6DUES5Q6A4DK4F",
-            secretKey: "JIUBdNH/drQZvXB7FYOPj7G/5/XKPumWON87kBiL07s",
-            successActionStatus: 201,
-        };
+        // const options = {
+        //     keyPrefix: "unprocessed/",
+        //     bucket: "trix",
+        //     region: "us-west-2",
+        //     awsUrl: "sfo2.digitaloceanspaces.com",
+        //     accessKey: "EASSTJ6DUES5Q6A4DK4F",
+        //     secretKey: "JIUBdNH/drQZvXB7FYOPj7G/5/XKPumWON87kBiL07s",
+        //     successActionStatus: 201,
+        // };
 
         try {
-            const response = await RNS3.put(file, options);
-            if (response.status === 201) {
-                //console.log("Success: ", response);
-                return "https://trix.sfo2.cdn.digitaloceanspaces.com/".concat(response.body.postResponse.key);
-            } else {
-                console.log("Failed to upload image to S3: ", response);
-            }
+            const bdy = { id: file["name"] };
+            let options = {
+                method: "POST",
+                body: file,
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "multipart/form-data",
+                },
+            };
+            const response = await fetch(
+                "https://mgezb5eugf.execute-api.us-west-2.amazonaws.com/api",
+                options
+            ).then((response) => response.json());
+
+            // console.log("boof", JSON.stringify(response));s
+            // const signedUrl = response["body"]["url"];
+            // const xhr = new XMLHttpRequest();
+            // xhr.open("PUT", signedUrl);
+            // console.log("oof", xhr);
+            // xhr.setRequestHeader("Content-Type", file.type);
+            // xhr.setRequestHeader("x-amz-acl", "public-read");
+            // console.log("oof2", xhr);
+            // xhr.send(file["uri"]).then(() => consle.log("big deal", xhr.status));
+
+            console.log("https://trix.sfo2.cdn.digitaloceanspaces.com/".concat("unprocessed/").concat(file["name"]));
+            return "https://trix.sfo2.cdn.digitaloceanspaces.com/".concat("unprocessed/").concat(file["name"]);
         } catch (error) {
             console.log(error);
         }

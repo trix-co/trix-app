@@ -56,7 +56,8 @@ export default class ProfileComp extends React.Component<ScreenProps<> & Injecte
     @autobind
     settings() {
         const { profile } = this.props.profileStore;
-        this.props.navigation.navigate("Settings", { profile });
+        store = this.props.profileStore;
+        this.props.navigation.navigate("Settings", { profile, store });
     }
 
     @autobind

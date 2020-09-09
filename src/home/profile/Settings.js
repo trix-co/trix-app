@@ -31,7 +31,10 @@ type SettingsState = {
     hasCameraRollPermission: boolean | null,
 };
 
-export default class Settings extends React.Component<ScreenParams<{ profile: Profile }>, SettingsState> {
+export default class Settings extends React.Component<
+    ScreenParams<{ profile: Profile, store: ProfileStore }>,
+    SettingsState
+> {
     state = {
         name: "",
         picture: {
@@ -54,6 +57,19 @@ export default class Settings extends React.Component<ScreenParams<{ profile: Pr
         this.setState({ name: profile.name, picture, loading: false, hasCameraRollPermission: null });
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         this.setState({ hasCameraRollPermission: status === "granted" });
+    }
+
+    @autobind
+    logout() {
+        try {
+            const { navigation } = this.props;
+            const { profile, store } = navigation.state.params;
+            navigation.navigate("Welcome");
+            store.deregister();
+            Firebase.auth.signOut();
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     @autobind
@@ -117,7 +133,6 @@ export default class Settings extends React.Component<ScreenParams<{ profile: Pr
         }
         return (
             <View style={styles.container}>
-                <StatusBar barStyle="light-content" />
                 <NavHeader title="Settings" back {...{ navigation }} />
                 <Content style={styles.content}>
                     <View style={styles.avatarContainer}>
@@ -138,14 +153,13 @@ export default class Settings extends React.Component<ScreenParams<{ profile: Pr
                         onChangeText={this.setName}
                     />
                     <Button label="Save" full primary onPress={this.save} {...{ loading }} />
-                    <Button label="Sign-Out" full onPress={logout} />
+                    <Button label="Sign-Out" full onPress={this.logout} />
                 </Content>
             </View>
         );
     }
 }
 
-const logout = () => Firebase.auth.signOut();
 const styles = StyleSheet.create({
     container: {
         flex: 1,
