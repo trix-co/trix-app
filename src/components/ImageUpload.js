@@ -36,11 +36,11 @@ export default class ImageUpload {
             [{ resize: { width: 1600, height: 1600 * (ogPic.height / ogPic.width) } }],
             { base64: false, format: "jpeg" }
         );
-
+        const name = ImageUpload.uid().concat(".jpg");
         const file = {
             // `uri` can also be a file system path (i.e. file://)
             uri: picture.uri,
-            name: ImageUpload.uid().concat(".jpg"),
+            name: name,
             type: "image/jpeg",
         };
 
@@ -60,6 +60,7 @@ export default class ImageUpload {
                 method: "POST",
                 body: file,
                 headers: {
+                    "x-imname": name,
                     Accept: "application/json",
                     "Content-Type": "multipart/form-data",
                 },
@@ -69,7 +70,7 @@ export default class ImageUpload {
                 options
             ).then((response) => response.json());
 
-            // console.log("boof", JSON.stringify(response));s
+            // console.log("boof", JSON.stringify(response));
             // const signedUrl = response["body"]["url"];
             // const xhr = new XMLHttpRequest();
             // xhr.open("PUT", signedUrl);
