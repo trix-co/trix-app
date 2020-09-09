@@ -78,6 +78,7 @@ export default function Phone() {
                                 //console.log(SignUpStore.phoneNumber);
                                 navigation.navigate("SignUpPassword");
                             } catch (err) {
+                                console.log(err);
                                 alert("Invalid phone number entered.");
                             }
                         }}

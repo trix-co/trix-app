@@ -35,7 +35,16 @@ export default class Welcome extends React.Component<ScreenProps<>> {
                 </View>
                 <AnimatedView style={styles.container} delay={400} duration={300}>
                     <Button label="Sign Up" onPress={this.signUp} full primary />
-                    <Text onPress={this.login} style={styles.signIn}>
+                    <Text
+                        onPress={this.login}
+                        hitSlop={{
+                            top: 10,
+                            bottom: 10,
+                            left: 25,
+                            right: 20,
+                        }}
+                        style={styles.signIn}
+                    >
                         <Text style={{ color: "#0d2129" }}>Have an account? </Text>{" "}
                         <Text style={{ color: "#48bf84" }}>Sign in.</Text>
                     </Text>

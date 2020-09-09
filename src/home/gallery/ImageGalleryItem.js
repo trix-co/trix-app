@@ -114,14 +114,13 @@ class ImageGalleryItem extends React.Component {
                             ? this._renderImage()
                             : null}
                     </View>
-                    <Text>Hello!</Text>
                 </View>
             );
         } else {
             return (
                 <View key={index} style={[{ width }, styles.itemContainer]}>
-                    <View style={[{ width, height: width }, styles.imageContainer]} />
-                    <View style={{ flex: 1, backgroundColor: "#0d2129" }} />
+                    <View style={[{ width, height: Layout.window.height }, styles.imageContainer]} />
+                    <View style={{ backgroundColor: "#0d2129" }} />
                 </View>
             );
         }
