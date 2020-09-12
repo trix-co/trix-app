@@ -35,24 +35,25 @@ export default class PhotoStore {
     async checkForNewEntriesInFeed(): Promise<void> {
         //console.log("running it!");
         if (this.lastKnownEntry) {
-            console.log("1");
+            //console.log("bingo", lastKnownEntry);
             const snap = await this.query.endBefore(this.lastKnownEntry).get();
+            console.log(snap.docs);
             if (snap.docs.length === 0) {
-                console.log("2");
+                //console.log("2");
                 if (!this.feed) {
-                    console.log("3");
+                    //console.log("3");
                     this.feed = [];
                 }
                 return;
             }
             const posts: TrixPicture[] = [];
             snap.forEach((postDoc) => {
-                console.log("loop!");
+                //console.log("loop!");
                 posts.push(postDoc.data());
             });
             //const feed = await this.joinProfiles(posts);
             this.addToFeed(posts);
-            console.log("size: ", Object.keys(posts).length);
+            //console.log("size: ", Object.keys(posts).length);
             // eslint-disable-next-line prefer-destructuring
             this.lastKnownEntry = snap.docs[0];
         } else {

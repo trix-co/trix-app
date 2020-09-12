@@ -1,8 +1,8 @@
 {
     "expo": {
-        "name": "trix-app",
-        "version": "0.1.0",
-        "description": "trix is a new kind of camera app that helps prevent facial recognition and other unwanted use of their data",
+        "name": "Trix",
+        "version": "1.0.2",
+        "description": "Trix is a new kind of camera app that helps users prevent facial recognition and other unwanted use of their data",
         "orientation": "portrait",
         "privacy": "public",
         "icon": "./assets/app.png",
@@ -18,11 +18,12 @@
             "barStyle": "dark-content"
         },
         "ios": {
-            "bundleIdentifier": "com.dfeld.trix",
-            "buildNumber": "1"
+            "bundleIdentifier": "co.trix.trixapp",
+            "buildNumber": "1.0.2"
         },
         "android": {
-            "package": "com.dfeld.trix"
+            "package": "co.trix.trixapp",
+            "versionCode": 2
         },
         "assetBundlePatterns": ["assets/*"],
         "slug": "trix-app",
