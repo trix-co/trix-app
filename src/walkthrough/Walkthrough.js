@@ -11,7 +11,7 @@ import Share from "./Share";
 import { Feather as Icon } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
-import { Button, Theme } from "../components";
+import { Button, Theme, Firebase } from "../components";
 import type { ScreenProps } from "../components/Types";
 
 type WalkthroughState = {
@@ -41,7 +41,9 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         if (Platform.OS === "android") {
             StatusBar.setBackgroundColor("white");
         }
-        navigation.navigate("Home");
+        const outline = "Walkthrough Complete";
+        const { uid } = Firebase.auth.currentUser;
+        Firebase.firestore.collection("users").doc(uid).update({ outline }).then(navigation.navigate("Home"));
     }
 
     @autobind

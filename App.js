@@ -25,6 +25,8 @@ import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, Pro
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
+import * as Amplitude from "expo-analytics-amplitude";
+const timer = require("react-native-timer");
 
 console.disableYellowBox = true;
 YellowBox.ignoreWarnings(["Warning: Async Storage has been extracted from react-native core"]);
@@ -86,10 +88,13 @@ class Loading extends React.Component<ScreenProps<>> {
         const { navigation, profileStore, photoStore } = this.props;
         await Loading.loadStaticResources();
         Firebase.init();
-        Firebase.auth.onAuthStateChanged((user) => {
+        Firebase.auth.onAuthStateChanged(async (user) => {
             const isUserAuthenticated = !!user;
             if (isUserAuthenticated) {
                 const { uid } = Firebase.auth.currentUser;
+                Amplitude.initialize("408fe1dac57c4e280f834551150dc3e9");
+                Amplitude.setUserId(uid);
+                profileStore.init();
                 // const feedQuery = Firebase.firestore.collection("feed").orderBy("timestamp", "desc");
                 // const userFeedQuery = Firebase.firestore
                 //     .collection("feed")
@@ -100,11 +105,15 @@ class Loading extends React.Component<ScreenProps<>> {
                     .where("uid", "==", uid)
                     .orderBy("timestamp", "desc");
 
-                photoStore.init(photoQuery);
-                profileStore.init();
-                //feedStore.init(feedQuery);
-                //userFeedStore.init(userFeedQuery);
-                navigation.navigate("Home");
+                timer.setTimeout(this, "init prof", () => photoStore.init(photoQuery), 1000);
+                prof = await Firebase.firestore.collection("users").doc(uid).get();
+                prof_data = prof.data();
+                //console.log(prof_data["outline"]);
+                if (prof_data["outline"] == "Walkthrough Complete") {
+                    navigation.navigate("Share");
+                } else {
+                    navigation.navigate("Home");
+                }
             } else {
                 navigation.navigate("Welcome");
             }

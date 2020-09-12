@@ -10,6 +10,7 @@ import Theme from "../../components/Theme";
 import { shallowEquals } from "./ShallowEquals";
 import { Feather as Icon } from "@expo/vector-icons";
 import CachedImage from "../../components/CachedImage";
+import * as Amplitude from "expo-analytics-amplitude";
 import * as FileSystem from "expo-file-system";
 import * as Crypto from "expo-crypto";
 
@@ -26,9 +27,11 @@ export default class ImageGalleryHeaderBar extends React.Component {
             const remoteURI = values[0];
             const hashed = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, remoteURI);
             const localURI = `${FileSystem.cacheDirectory}${hashed}.jpg`;
-            console.log("locall", localURI);
+            //console.log("locall", localURI);
             if (Platform.OS === "android") {
                 const share = await Sharing.shareAsync(localURI);
+                //console.log(share);
+                Amplitude.logEvent("photoShared");
             } else {
                 Share.share(
                     {
@@ -36,7 +39,12 @@ export default class ImageGalleryHeaderBar extends React.Component {
                         title: "Image from Trix.co",
                     },
                     { UTI: "public.jpeg" }
-                );
+                ).then((shr) => {
+                    Amplitude.logEventWithProperties("photoShared", {
+                        action: shr.action,
+                        activityType: shr.activityType,
+                    });
+                });
             }
         } catch (e) {
             console.error(e);

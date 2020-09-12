@@ -36,11 +36,11 @@ export default class ImageUpload {
             [{ resize: { width: 1600, height: 1600 * (ogPic.height / ogPic.width) } }],
             { base64: false, format: "jpeg" }
         );
-        const name = ImageUpload.uid().concat(".jpg");
+
         const file = {
             // `uri` can also be a file system path (i.e. file://)
             uri: picture.uri,
-            name: name,
+            name: ImageUpload.uid().concat(".jpg"),
             type: "image/jpeg",
         };
 
@@ -56,31 +56,33 @@ export default class ImageUpload {
 
         try {
             const bdy = { id: file["name"] };
-            let options = {
+
+            var body = new FormData();
+            body.append(file);
+
+            fetch("https://mgezb5eugf.execute-api.us-west-2.amazonaws.com/api", {
                 method: "POST",
-                body: file,
                 headers: {
-                    "x-imname": name,
-                    Accept: "application/json",
-                    "Content-Type": "multipart/form-data",
+                    accept: "*/*",
+                    "Content-Type": "application/json",
                 },
-            };
-            const response = await fetch(
-                "https://mgezb5eugf.execute-api.us-west-2.amazonaws.com/api",
-                options
-            ).then((response) => response.json());
+                body: JSON.stringify(bdy),
+            }).then((response) => {
+                response.json().then((json) => {
+                    //console.log(JSON.stringify(response));
+                    //console.log(JSON.stringify(json));
+                    //console.log("hello", json.body.url);
+                    const signedUrl = json.body.url.substring(1, json.body.url.length - 1);
+                    const xhr = new XMLHttpRequest();
+                    //console.log(signedUrl);
+                    xhr.open("PUT", signedUrl);
+                    xhr.setRequestHeader("Content-Type", "image/jpeg");
+                    xhr.setRequestHeader("x-amz-acl", "public-read");
+                    xhr.send(file);
+                });
+            });
 
-            // console.log("boof", JSON.stringify(response));
-            // const signedUrl = response["body"]["url"];
-            // const xhr = new XMLHttpRequest();
-            // xhr.open("PUT", signedUrl);
-            // console.log("oof", xhr);
-            // xhr.setRequestHeader("Content-Type", file.type);
-            // xhr.setRequestHeader("x-amz-acl", "public-read");
-            // console.log("oof2", xhr);
-            // xhr.send(file["uri"]).then(() => consle.log("big deal", xhr.status));
-
-            console.log("https://trix.sfo2.cdn.digitaloceanspaces.com/".concat("unprocessed/").concat(file["name"]));
+            //console.log("https://trix.sfo2.cdn.digitaloceanspaces.com/".concat("unprocessed/").concat(file["name"]));
             return "https://trix.sfo2.cdn.digitaloceanspaces.com/".concat("unprocessed/").concat(file["name"]);
         } catch (error) {
             console.log(error);

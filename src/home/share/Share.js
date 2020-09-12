@@ -2,6 +2,7 @@
 import moment from "moment";
 import autobind from "autobind-decorator";
 import * as React from "react";
+import * as firebase from "firebase";
 import {
     StyleSheet,
     View,
@@ -15,7 +16,7 @@ import {
 import { Camera } from "expo-camera";
 import * as Permissions from "expo-permissions";
 import { Feather as Icon } from "@expo/vector-icons";
-
+import * as Amplitude from "expo-analytics-amplitude";
 import EnableCameraPermission from "./EnableCameraPermission";
 import FlashIcon from "./FlashIcon";
 const timer = require("react-native-timer");
@@ -79,7 +80,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         if (Platform.OS === "android") {
             const DESIRED_RATIO = "5:3";
             const ratios = await this.camera.current.getSupportedRatiosAsync();
-            console.log("hooligan", ratios);
+            //console.log("hooligan", ratios);
             const ratio = ratios.find((r) => r === DESIRED_RATIO) || ratios[ratios.length - 1];
             this.setState({ ratio });
         }
@@ -139,10 +140,11 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     async snap(): Promise<void> {
         const { navigation } = this.props;
         try {
+            //this.camera.current.pausePreview();
             const picture = await this.camera.current.takePictureAsync({ base64: false, skipProcessing: false });
-            this.camera.current.pausePreview();
-            this.setState({ loading: true });
-
+            await this.showMsg();
+            //this.setState({ loading: true });
+            //this.camera.current.resumePreview();
             await this.upload(picture);
             const { uid } = Firebase.auth.currentUser;
             const post: NativePicture = {
@@ -157,9 +159,22 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
             //console.log(post);
             //await Firebase.firestore.collection("nativepics").doc(this.id).set(post);
             await this.enque(post);
-            this.setState({ loading: false });
-            this.camera.current.resumePreview();
-            await this.showMsg();
+            const increment = firebase.firestore.FieldValue.increment(1);
+            const userRef = Firebase.firestore.collection("users").doc(uid);
+            const resp = await userRef.update({ unprocessedCount: increment });
+            //console.log("camma", this.state.type);
+
+            if (Platform.OS === "android") {
+                Amplitude.logEventWithProperties("photoTaken", {
+                    type: this.state.type == 0 ? "back" : "front",
+                });
+            } else {
+                Amplitude.logEventWithProperties("photoTaken", {
+                    type: this.state.type == 1 ? "back" : "front",
+                });
+            }
+
+            //this.setState({ loading: false });
         } catch (e) {
             this.setState({ loading: false });
             console.log("something went wrong!", e);

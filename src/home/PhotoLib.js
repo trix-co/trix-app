@@ -11,11 +11,15 @@ import {
     ScrollView,
     StatusBar,
     Text,
+    RefreshControl,
+    Platform,
 } from "react-native";
+import * as Amplitude from "expo-analytics-amplitude";
 
 import { Feather as Icon, FontAwesome } from "@expo/vector-icons";
 
 import ImageGallery, { openImageGallery } from "./gallery";
+import Layout from "./gallery/Layout";
 import type { Profile } from "../../components/Model";
 import CachedImage from "../components/CachedImage";
 import { inject, observer } from "mobx-react/native";
@@ -34,7 +38,6 @@ import { NavigationEvents } from "react-navigation";
 import { EnableCameraRollPermission } from "./profile";
 import * as ImagePicker from "expo-image-picker";
 import autobind from "autobind-decorator";
-import AWS from "aws-sdk";
 const timer = require("react-native-timer");
 
 type LibState = {
@@ -55,6 +58,7 @@ class ListItem extends React.Component<InjectedProps> {
     _openInImageGallery = () => {
         const feed = this.props.photoStore.feed;
         let { item } = this.props;
+        Amplitude.logEventWithProperties("photoClickedInGallery", { photoId: item.id });
         this._view.measure((rx, ry, w, h, x, y) => {
             openImageGallery({
                 animationMeasurements: { w, h, x, y },
@@ -74,7 +78,7 @@ class ListItem extends React.Component<InjectedProps> {
                         try {
                             this._view = view._view;
                         } catch (error) {
-                            console.log(error);
+                            //console.log(error);
                         }
                     }}
                     source={{ uri: item.imageUrl }}
@@ -85,7 +89,7 @@ class ListItem extends React.Component<InjectedProps> {
     }
 }
 
-@inject("photoStore")
+@inject("photoStore", "profileStore")
 @observer
 class ImageGrid extends React.Component<InjectedProps> {
     constructor(props) {
@@ -93,8 +97,17 @@ class ImageGrid extends React.Component<InjectedProps> {
 
         this.state = {
             isEmpty: true,
+            refreshing: false,
+            photosProcessing: 0,
         };
     }
+
+    onRefresh = () => {
+        this.loadFeed();
+        this.setState({ refreshing: true });
+        timer.setTimeout(this, "loadFeedEveryMin", () => this.setState({ refreshing: false }), 1000);
+        Amplitude.logEvent("refreshRequested");
+    };
 
     componentDidMount() {
         this.loadFeed();
@@ -106,30 +119,55 @@ class ImageGrid extends React.Component<InjectedProps> {
     };
 
     loadFeed = () => {
+        this.setState({ refreshing: true });
         this.props.photoStore
             .checkForNewEntriesInFeed()
-            .then(this.setState({ isEmpty: this.props.photoStore.feed.length === 0 }));
+            .then(this.setState({ isEmpty: this.props.photoStore.feed.length === 0, refreshing: false }));
+        this.setState({ photosProcessing: this.props.profileStore.profile.unprocessedCount });
     };
 
     render() {
         const feed = this.props.photoStore.feed;
+        //console.log("doggo", feed.length);
         return (
             <View style={styles.imagegrid}>
                 <NavigationEvents onWillFocus={this.loadFeed} />
                 <NavHeader title="Photos" />
-                {this.state.isEmpty ? (
+                {this.state.photosProcessing > 0 && (
+                    <View
+                        style={{
+                            flex: 0.04 + 0.08 * +(this.props.photoStore.feed.length === 0),
+                            backgroundColor: "#0d2129",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Text style={{ color: "white" }}>
+                            Swipe down to refresh. Waiting on {this.state.photosProcessing} photo(s)...
+                        </Text>
+                    </View>
+                )}
+                <View style={{ flex: 1 }}>
+                    <ScrollView
+                        contentContainerStyle={styles.layout}
+                        minimumZoomScale={1}
+                        maximumZoomScale={5}
+                        refreshControl={
+                            <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+                        }
+                    >
+                        {feed.map((item) => (
+                            <ListItem key={item.imageUrl} item={item} />
+                        ))}
+                    </ScrollView>
+                </View>
+                {this.props.photoStore.feed.length === 0 && (
                     <View style={styles.emptystate}>
                         <FontAwesome name="file-picture-o" style={{ color: Theme.palette.secondary }} size={75} />
                         <Text style={styles.emptystateText}>
                             Snap or import a photo to protect it from facial recognition.
                         </Text>
                     </View>
-                ) : (
-                    <ScrollView contentContainerStyle={styles.layout} minimumZoomScale={1} maximumZoomScale={5}>
-                        {feed.map((item) => (
-                            <ListItem key={item.imageUrl} item={item} />
-                        ))}
-                    </ScrollView>
                 )}
             </View>
         );
@@ -182,7 +220,6 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
     }
     @autobind
     async uploadFromOS(): Promise<void> {
-        console.log("that worked!");
         const { hasCameraRollPermission } = this.state;
         if (hasCameraRollPermission === null) {
             return (
@@ -197,9 +234,9 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
             allowsEditing: false,
         });
         if (result.cancelled === false) {
-            this.setState({ loading: true });
+            await this.showMsg();
+            //this.setState({ loading: true });
             const { uri, width, height } = result;
-            console.log("heyyo", uri);
             const picture: Picture = {
                 uri,
                 width,
@@ -219,8 +256,9 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
                     preview: this.preview,
                 };
                 await this.enque(post);
-                this.setState({ loading: false });
-                await this.showMsg();
+                Amplitude.logEvent("photoImported");
+
+                //this.setState({ loading: false });
             } catch (e) {
                 this.setState({ loading: false });
                 console.log("something went wrong!", e);
@@ -232,7 +270,7 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
 
     @autobind
     async showMsg(): Promise<void> {
-        console.log("Show message!!");
+        //console.log("Show message!!");
         this.setState({ showMsg: true }, () =>
             timer.setTimeout(this, "hideMsg", () => this.setState({ showMsg: false }), 1000)
         );
@@ -303,7 +341,7 @@ const styles = StyleSheet.create({
 
     icon: {
         position: "absolute",
-        top: Platform.OS === "android" ? 34 : 46,
+        top: Platform.OS === "android" ? 34 : Layout.headerHeight * 1.5 - 72,
         right: 30,
     },
     actual_icon: {
@@ -320,9 +358,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     emptystate: {
-        flex: 1,
+        flex: 2,
         margin: 30,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
     },
     emptystateText: {

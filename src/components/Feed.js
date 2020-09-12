@@ -55,7 +55,7 @@ export default class Feed extends React.Component<FeedProps> {
         const { feed } = store;
         //console.log("dingbat!");
         //console.log(feed.feed);
-        const loading = feed.length === 0;
+        const loading = feed === undefined;
         return (
             <SafeAreaView style={styles.list}>
                 <FlatList

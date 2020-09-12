@@ -64,7 +64,8 @@ export default function Phone() {
                                 const user = await firebase.auth().signInWithCredential(credential);
                                 const profile: Profile = {
                                     name: SignUpStore.displayName,
-                                    outline: "React Native",
+                                    unprocessedCount: 0,
+                                    outline: "Walkthrough Incomplete",
                                     picture: {
                                         // eslint-disable-next-line max-len
                                         uri:
@@ -74,7 +75,7 @@ export default function Phone() {
                                     },
                                 };
                                 await Firebase.firestore.collection("users").doc(user.user.uid).set(profile);
-                                console.log("Phone sign-up successful 👍");
+                                //console.log("Phone sign-up successful 👍");
                             } catch (err) {
                                 alert(`Error: code not accepted as valid. Please try again.`);
                             }

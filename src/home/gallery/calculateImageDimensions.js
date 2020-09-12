@@ -40,7 +40,7 @@ export default function calculateImageDimensions(item, maxLength) {
         };
     } else {
         let height = (maxLength * (originalHeight / maxLength)) / (originalWidth / Layout.window.width);
-        console.log();
+        //console.log();
         return {
             constrainedWidth: Layout.window.width,
             constrainedHeight: height,

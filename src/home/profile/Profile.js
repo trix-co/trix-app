@@ -74,6 +74,7 @@ export default class ProfileComp extends React.Component<ScreenProps<> & Injecte
     render(): React.Node {
         const { navigation, photoStore, profileStore } = this.props;
         const { profile } = profileStore;
+        //console.log(profile);
         const date = new Date();
         const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         const fdMillis = moment(firstDay, "YYYY-MM-DD HH:mm:ss").valueOf() / 1000;
