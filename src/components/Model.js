@@ -13,6 +13,7 @@ export type TrixPicture = {
     uid: string,
     imageUrl: string,
     preview: string,
+    tombstone: bool,
 };
 
 export type NativePicture = {

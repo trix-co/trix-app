@@ -1,21 +1,61 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Animated, Platform, StyleSheet, Text, TouchableOpacity, View, StatusBar, Share } from "react-native";
+import { Animated, Platform, StyleSheet, Text, TouchableOpacity, View, StatusBar, Share, Alert } from "react-native";
 import { connect } from "react-redux";
 import autobind from "autobind-decorator";
 import * as Sharing from "expo-sharing";
 import Colors from "./Colors";
 import Layout from "./Layout";
-import Theme from "../../components/Theme";
+import Firebase from "../../components/Firebase";
 import { shallowEquals } from "./ShallowEquals";
 import { Feather as Icon } from "@expo/vector-icons";
 import CachedImage from "../../components/CachedImage";
 import * as Amplitude from "expo-analytics-amplitude";
 import * as FileSystem from "expo-file-system";
 import * as Crypto from "expo-crypto";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { inject } from "mobx-react/native";
 
+@inject("photoStore")
 @connect((data) => ImageGalleryHeaderBar.getDataProps(data))
-export default class ImageGalleryHeaderBar extends React.Component {
+export default class ImageGalleryHeaderBar extends React.Component<InjectedProps> {
+    @autobind
+    async deleteImage(): Promise<void> {
+        try {
+            let item = this.props.item;
+            const values = [];
+            for (var val of item.values()) {
+                values.push(val);
+            }
+            const { uid } = Firebase.auth.currentUser;
+            //should be fine to use this as a key
+            const remoteURI = values[0];
+            const trixPix = Firebase.firestore.collection("trixpix");
+            trixPix
+                .where("uid", "==", uid)
+                .where("imageUrl", "==", remoteURI)
+                .get()
+                .then((snapshots) => {
+                    if (snapshots.size > 0) {
+                        snapshots.forEach((item) => {
+                            trixPix.doc(item.id).update({ tombstone: true });
+                            console.log("hoops", item.id);
+                        });
+                    } else {
+                        console.log("nothing in snapshot!");
+                    }
+                });
+            Amplitude.logEventWithProperties("photoShared", {
+                imageURL: remoteURI,
+            });
+            this.props.photoStore.updateTombstones(remoteURI);
+            this.props.onPressDone();
+            Alert.alert("Photo sucessfully deleted - will not appear after next refresh.");
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     @autobind
     async shareImage(): Promise<void> {
         try {
@@ -106,17 +146,31 @@ export default class ImageGalleryHeaderBar extends React.Component {
         return (
             <Animated.View style={[style, styles.animatedStyle]}>
                 <Text style={styles.headeBarTitleText}>Photos</Text>
-                <TouchableOpacity
-                    onPress={this.shareImage}
-                    hitSlop={{
-                        top: 4,
-                        bottom: 5,
-                        left: 25,
-                        right: 20,
-                    }}
-                >
-                    <Icon name="upload" size={25} color="#0f5257" />
-                </TouchableOpacity>
+                <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
+                    <TouchableWithoutFeedback
+                        style={{ paddingRight: 20 }}
+                        onPress={this.deleteImage}
+                        hitSlop={{
+                            top: 10,
+                            bottom: 10,
+                            left: 20,
+                            right: 100,
+                        }}
+                    >
+                        <Icon name="trash" size={25} color="#0f5257" />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback
+                        onPress={this.shareImage}
+                        hitSlop={{
+                            top: 10,
+                            bottom: 10,
+                            left: 20,
+                            right: 100,
+                        }}
+                    >
+                        <Icon name="upload" size={25} color="#0f5257" />
+                    </TouchableWithoutFeedback>
+                </View>
 
                 <View style={styles.back}>{rightAction}</View>
             </Animated.View>

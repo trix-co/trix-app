@@ -86,6 +86,18 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         }
     };
 
+    loadCamera = async () => {
+        if (Platform.OS === "android") {
+            this.setState({ loaded: true });
+        }
+    };
+
+    unloadCamera = async () => {
+        if (Platform.OS === "android") {
+            this.setState({ loaded: false });
+        }
+    };
+
     @autobind
     toggle() {
         this.setState({ loading: false });
@@ -155,13 +167,14 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
                 timestamp: parseInt(moment().format("X"), 10),
                 imageUrl: this.url,
                 preview: this.preview,
+                tombstone: false,
             };
             //console.log(post);
             //await Firebase.firestore.collection("nativepics").doc(this.id).set(post);
-            await this.enque(post);
             const increment = firebase.firestore.FieldValue.increment(1);
             const userRef = Firebase.firestore.collection("users").doc(uid);
             const resp = await userRef.update({ unprocessedCount: increment });
+            await this.enque(post);
             //console.log("camma", this.state.type);
 
             if (Platform.OS === "android") {
@@ -203,10 +216,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         }
         return (
             <View style={styles.container}>
-                <NavigationEvents
-                    onWillFocus={(payload) => this.setState({ loaded: true })}
-                    onDidBlur={(payload) => this.setState({ loaded: false })}
-                />
+                <NavigationEvents onWillFocus={this.loadCamera} onDidBlur={this.unloadCamera} />
                 <NavHeader title="Camera" {...{ navigation }} />
 
                 {this.state.loaded && (

@@ -31,6 +31,7 @@ export default function Phone() {
               }
             : undefined
     );
+    const [loading, setLoading] = React.useState();
 
     return (
         <Container gutter={1}>
@@ -55,8 +56,10 @@ export default function Phone() {
                         //disabled={!phoneNumber}
                         full
                         primary
+                        {...{ navigation, loading }}
                         onPress={async () => {
                             try {
+                                setLoading(true);
                                 const credential = firebase.auth.PhoneAuthProvider.credential(
                                     SignUpStore.verificationId,
                                     verificationCode
@@ -76,7 +79,9 @@ export default function Phone() {
                                 };
                                 await Firebase.firestore.collection("users").doc(user.user.uid).set(profile);
                                 //console.log("Phone sign-up successful 👍");
+                                setLoading(false);
                             } catch (err) {
+                                setLoading(false);
                                 alert(`Error: code not accepted as valid. Please try again.`);
                             }
                         }}

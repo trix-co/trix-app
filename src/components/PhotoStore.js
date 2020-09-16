@@ -32,6 +32,14 @@ export default class PhotoStore {
         this.loadFeed();
     }
 
+    async updateTombstones(url): Promise<void> {
+        var tempFeed = this.feed;
+        tempFeed = _.map(tempFeed, function (o) {
+            if (!(o.imageUrl == url)) return o;
+        });
+        this.feed = _.without(tempFeed, undefined);
+    }
+
     async checkForNewEntriesInFeed(): Promise<void> {
         //console.log("running it!");
         if (this.lastKnownEntry) {

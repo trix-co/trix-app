@@ -1,7 +1,7 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import { StyleSheet, View, TouchableOpacity, Platform, SafeAreaView, Text, StatusBar } from "react-native";
+import { StyleSheet, View, TouchableWithoutFeedback, Platform, SafeAreaView, Text, Image } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 
 //import Text from "./Text";
@@ -36,15 +36,34 @@ export default class NavHeader extends React.Component<NavHeaderProps> {
                 <View style={styles.content}>
                     <View style={styles.side}>
                         {back && (
-                            <TouchableOpacity {...{ onPress }}>
+                            <TouchableWithoutFeedback
+                                {...{ onPress }}
+                                hitSlop={{
+                                    top: 10,
+                                    bottom: 10,
+                                    left: 20,
+                                    right: 100,
+                                }}
+                            >
                                 <View style={styles.back}>
                                     <Icon name="chevron-left" size={25} />
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableWithoutFeedback>
                         )}
                     </View>
-                    <Text style={styles.text}>{title}</Text>
-                    <View style={styles.side} />
+                    {/* <Text style={styles.text}>{title}</Text> */}
+
+                    <Image
+                        source={require("../../assets/trix_logo.png")}
+                        style={{
+                            height: 35,
+                            width: 75,
+                            position: "absolute",
+                            resizeMode: "contain",
+                            marginTop: -4,
+                            marginLeft: Platform.OS === "ios" ? "5%" : "5%",
+                        }}
+                    />
                 </View>
             </SafeAreaView>
         );
