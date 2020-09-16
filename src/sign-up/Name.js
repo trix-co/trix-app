@@ -65,7 +65,7 @@ export default class Name extends React.Component<NavigationProps<*>, NameState>
                     placeholder="First"
                     autoCapitalize="none"
                     autoCorrect={false}
-                    returnKeyType="Next"
+                    returnKeyType="next"
                     onSubmitEditing={this.goToLastName}
                     onChangeText={this.setFirstName}
                 />

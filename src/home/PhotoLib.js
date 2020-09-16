@@ -15,6 +15,7 @@ import {
     Platform,
 } from "react-native";
 import * as Amplitude from "expo-analytics-amplitude";
+import _ from "lodash";
 
 import { Feather as Icon, FontAwesome } from "@expo/vector-icons";
 
@@ -56,7 +57,12 @@ type InjectedProps = {
 @observer
 class ListItem extends React.Component<InjectedProps> {
     _openInImageGallery = () => {
-        const feed = this.props.photoStore.feed;
+        var feed = this.props.photoStore.feed;
+        feed = _.map(feed, function (o) {
+            if (!(o.tombstone == true)) return o;
+        });
+        feed = _.without(feed, undefined);
+
         let { item } = this.props;
         Amplitude.logEventWithProperties("photoClickedInGallery", { photoId: item.id });
         this._view.measure((rx, ry, w, h, x, y) => {
@@ -99,9 +105,10 @@ class ImageGrid extends React.Component<InjectedProps> {
             isEmpty: true,
             refreshing: false,
             photosProcessing: 0,
+            interval: null,
+            feed: null,
         };
     }
-
     onRefresh = () => {
         this.loadFeed();
         this.setState({ refreshing: true });
@@ -109,13 +116,27 @@ class ImageGrid extends React.Component<InjectedProps> {
         Amplitude.logEvent("refreshRequested");
     };
 
+    componentWillMount() {
+        var currFeed = this.props.photoStore.feed;
+        currFeed = _.map(currFeed, function (o) {
+            if (!(o.tombstone == true)) return o;
+        });
+        currFeed = _.without(currFeed, undefined);
+        console.log("ding", currFeed);
+        this.setState({ feed: currFeed });
+    }
+
     componentDidMount() {
         this.loadFeed();
         this.loadFeedEveryMinute();
     }
 
+    componentWillUnmount() {
+        timer.clearInterval(this.state.interval);
+    }
+
     loadFeedEveryMinute = () => {
-        timer.setInterval(this, "loadFeedEveryMin", () => this.loadFeed(), 30000);
+        this.setState({ interval: timer.setInterval(this, "loadFeedEveryMin", () => this.loadFeed(), 30000) });
     };
 
     loadFeed = () => {
@@ -124,10 +145,17 @@ class ImageGrid extends React.Component<InjectedProps> {
             .checkForNewEntriesInFeed()
             .then(this.setState({ isEmpty: this.props.photoStore.feed.length === 0, refreshing: false }));
         this.setState({ photosProcessing: this.props.profileStore.profile.unprocessedCount });
+        var currFeed = this.props.photoStore.feed;
+        currFeed = _.map(currFeed, function (o) {
+            if (!(o.tombstone == true)) return o;
+        });
+        currFeed = _.without(currFeed, undefined);
+        console.log("ding", currFeed.length);
+        this.setState({ feed: currFeed });
     };
 
     render() {
-        const feed = this.props.photoStore.feed;
+        const photos = this.state.photosProcessing;
         //console.log("doggo", feed.length);
         return (
             <View style={styles.imagegrid}>
@@ -142,9 +170,7 @@ class ImageGrid extends React.Component<InjectedProps> {
                             alignItems: "center",
                         }}
                     >
-                        <Text style={{ color: "white" }}>
-                            Swipe down to refresh. Waiting on {this.state.photosProcessing} photo(s)...
-                        </Text>
+                        <Text style={{ color: "white" }}>Swipe down to refresh. Working on {photos} photo(s)...</Text>
                     </View>
                 )}
                 <View style={{ flex: 1 }}>
@@ -156,7 +182,7 @@ class ImageGrid extends React.Component<InjectedProps> {
                             <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
                         }
                     >
-                        {feed.map((item) => (
+                        {this.state.feed.map((item) => (
                             <ListItem key={item.imageUrl} item={item} />
                         ))}
                     </ScrollView>

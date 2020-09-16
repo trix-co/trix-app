@@ -35,6 +35,7 @@ export default function Phone() {
               }
             : undefined
     );
+    const [loading, setLoading] = React.useState();
 
     return (
         <Container gutter={1}>
@@ -61,11 +62,13 @@ export default function Phone() {
                         //disabled={!phoneNumber}
                         full
                         primary
+                        {...{ navigation, loading }}
                         onPress={async () => {
                             // The FirebaseRecaptchaVerifierModal ref implements the
                             // FirebaseAuthApplicationVerifier interface and can be
                             // passed directly to `verifyPhoneNumber`.
                             try {
+                                setLoading(true);
                                 const phoneProvider = new firebase.auth.PhoneAuthProvider();
                                 const verificationId = await phoneProvider.verifyPhoneNumber(
                                     phoneNumber,
@@ -76,8 +79,10 @@ export default function Phone() {
                                 SignUpStore.phoneNumber = phoneNumber;
                                 //console.log(SignUpStore.verificationId);
                                 //console.log(SignUpStore.phoneNumber);
+                                setLoading(false);
                                 navigation.navigate("LoginValidate");
                             } catch (err) {
+                                setLoading(false);
                                 alert("Invalid phone number entered.");
                             }
                         }}
