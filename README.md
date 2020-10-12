@@ -1,11 +1,10 @@
-## React Native Fiber Firebase v1.1.7
+## Trix Camera App
 
-Thanks for purchasing the React Native Fiber Firebase.
+The Trix camera app allows users to apply protective filters (that protect from facial recognition) from their iOS or Android mobile device.
 
-Follow the documentation to install and get started with the development:
+Images taken in Trix are sent to Trix servers (AWS is currently used for hosting) and protected via a model-serving optimized version of Fawkes.
 
--   [Documentation](https://wcandillon.github.io/react-native-fiber/Firebase.html)
--   [Product Page](https://market.nativebase.io/view/react-native-fiber-firebase)
--	[License Page](https://market.nativebase.io/licenses)
-
-Happy coding!# trix-app
+We will never view your images or use your data for purposes other than understanding how users are using our service or improving our product, in aggregate. Usage information we collect (via Amplitude):
+*Photos taken or uploaded to our service
+*Photos viewed and deleted from our app
+*Photos shared
