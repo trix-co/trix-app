@@ -52,7 +52,6 @@ type LibState = {
 
 type InjectedProps = {
     photoStore: PhotoStore,
-    feedStore: FeedStore,
 };
 
 @inject("photoStore")

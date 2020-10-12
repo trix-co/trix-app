@@ -4,7 +4,6 @@ export { AnimatedView } from "./Animations";
 export { TextField } from "./Fields";
 
 export { default as Images } from "./images";
-export { default as Post } from "./post";
 export { default as Text } from "./Text";
 export { default as Button } from "./Button";
 export { default as Container } from "./Container";
@@ -17,10 +16,7 @@ export { default as CacheManager } from "./CacheManager";
 export { default as RefreshIndicator } from "./RefreshIndicator";
 export { default as NavHeader } from "./NavHeader";
 export { default as Firebase } from "./Firebase";
-export { default as FirstPost } from "./FirstPost";
 export { default as ImageUpload } from "./ImageUpload";
-export { default as Feed } from "./Feed";
-export { default as FeedStore } from "./FeedStore";
 export { default as SpinningIndicator } from "./SpinningIndicator";
 export { default as PhotoStore } from "./PhotoStore";
 export { default as CachedImage } from "./CachedImage";
