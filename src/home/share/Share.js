@@ -3,6 +3,8 @@ import moment from "moment";
 import autobind from "autobind-decorator";
 import * as React from "react";
 import * as firebase from "firebase";
+import * as Haptics from "expo-haptics";
+
 import {
     StyleSheet,
     View,
@@ -11,6 +13,7 @@ import {
     TouchableOpacity,
     Modal,
     Platform,
+    StatusBar,
     Text,
 } from "react-native";
 import { Camera } from "expo-camera";
@@ -64,12 +67,16 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
 
     @autobind
     async showMsg(): Promise<void> {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         this.setState({ showMsg: true }, () =>
             timer.setTimeout(this, "hideMsg", () => this.setState({ showMsg: false }), 1000)
         );
     }
 
     async componentDidMount(): Promise<void> {
+        if (Platform.OS === "ios") {
+            StatusBar.setBarStyle("dark-content");
+        }
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({
             hasCameraPermission: status === "granted",
@@ -153,6 +160,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
         const { navigation } = this.props;
         try {
             //this.camera.current.pausePreview();
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
             const picture = await this.camera.current.takePictureAsync({ base64: false, skipProcessing: false });
             await this.showMsg();
             //this.setState({ loading: true });

@@ -15,7 +15,9 @@ import {
     Platform,
 } from "react-native";
 import * as Amplitude from "expo-analytics-amplitude";
+import * as firebase from "firebase";
 import _ from "lodash";
+import * as Haptics from "expo-haptics";
 
 import { Feather as Icon, FontAwesome } from "@expo/vector-icons";
 
@@ -58,11 +60,6 @@ type InjectedProps = {
 class ListItem extends React.Component<InjectedProps> {
     _openInImageGallery = () => {
         var feed = this.props.photoStore.feed;
-        feed = _.map(feed, function (o) {
-            if (!(o.tombstone == true)) return o;
-        });
-        feed = _.without(feed, undefined);
-
         let { item } = this.props;
         Amplitude.logEventWithProperties("photoClickedInGallery", { photoId: item.id });
         this._view.measure((rx, ry, w, h, x, y) => {
@@ -112,18 +109,12 @@ class ImageGrid extends React.Component<InjectedProps> {
     onRefresh = () => {
         this.loadFeed();
         this.setState({ refreshing: true });
-        timer.setTimeout(this, "loadFeedEveryMin", () => this.setState({ refreshing: false }), 1000);
+        timer.setTimeout(this, "refresh", () => this.setState({ refreshing: false }), 1000);
         Amplitude.logEvent("refreshRequested");
     };
 
     componentWillMount() {
-        var currFeed = this.props.photoStore.feed;
-        currFeed = _.map(currFeed, function (o) {
-            if (!(o.tombstone == true)) return o;
-        });
-        currFeed = _.without(currFeed, undefined);
-        console.log("ding", currFeed);
-        this.setState({ feed: currFeed });
+        this.setState({ feed: this.props.photoStore.feed });
     }
 
     componentDidMount() {
@@ -132,7 +123,7 @@ class ImageGrid extends React.Component<InjectedProps> {
     }
 
     componentWillUnmount() {
-        timer.clearInterval(this.state.interval);
+        this.props.profileStore.deregister();
     }
 
     loadFeedEveryMinute = () => {
@@ -140,18 +131,13 @@ class ImageGrid extends React.Component<InjectedProps> {
     };
 
     loadFeed = () => {
-        this.setState({ refreshing: true });
-        this.props.photoStore
-            .checkForNewEntriesInFeed()
-            .then(this.setState({ isEmpty: this.props.photoStore.feed.length === 0, refreshing: false }));
-        this.setState({ photosProcessing: this.props.profileStore.profile.unprocessedCount });
-        var currFeed = this.props.photoStore.feed;
-        currFeed = _.map(currFeed, function (o) {
-            if (!(o.tombstone == true)) return o;
+        this.props.photoStore.checkForNewEntriesInFeed().then(() => {
+            this.setState({
+                isEmpty: this.props.photoStore.feed.length === 0,
+                photosProcessing: this.props.profileStore.profile.unprocessedCount,
+                feed: this.props.photoStore.feed,
+            });
         });
-        currFeed = _.without(currFeed, undefined);
-        console.log("ding", currFeed.length);
-        this.setState({ feed: currFeed });
     };
 
     render() {
@@ -160,17 +146,18 @@ class ImageGrid extends React.Component<InjectedProps> {
         return (
             <View style={styles.imagegrid}>
                 <NavigationEvents onWillFocus={this.loadFeed} />
-                <NavHeader title="Photos" />
                 {this.state.photosProcessing > 0 && (
                     <View
                         style={{
-                            flex: 0.04 + 0.08 * +(this.props.photoStore.feed.length === 0),
+                            flex: 0.04 + 0.08 * +(this.state.feed.length === 0),
                             backgroundColor: "#0d2129",
                             justifyContent: "center",
                             alignItems: "center",
                         }}
                     >
-                        <Text style={{ color: "white" }}>Swipe down to refresh. Working on {photos} photo(s)...</Text>
+                        <Text style={{ color: "white" }}>
+                            Working on {photos} photo(s). Will refresh automatically...
+                        </Text>
                     </View>
                 )}
                 <View style={{ flex: 1 }}>
@@ -187,7 +174,7 @@ class ImageGrid extends React.Component<InjectedProps> {
                         ))}
                     </ScrollView>
                 </View>
-                {this.props.photoStore.feed.length === 0 && (
+                {this.state.feed.length === 0 && (
                     <View style={styles.emptystate}>
                         <FontAwesome name="file-picture-o" style={{ color: Theme.palette.secondary }} size={75} />
                         <Text style={styles.emptystateText}>
@@ -212,6 +199,8 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
         ratio: undefined,
         showMsg: false,
     };
+
+    gridRef = React.createRef();
 
     @autobind
     async enque(post: NativePicture): c {
@@ -261,6 +250,7 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
         });
         if (result.cancelled === false) {
             await this.showMsg();
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             //this.setState({ loading: true });
             const { uri, width, height } = result;
             const picture: Picture = {
@@ -281,8 +271,12 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
                     imageUrl: this.url,
                     preview: this.preview,
                 };
+                const increment = firebase.firestore.FieldValue.increment(1);
+                const userRef = Firebase.firestore.collection("users").doc(uid);
+                const resp = await userRef.update({ unprocessedCount: increment });
                 await this.enque(post);
                 Amplitude.logEvent("photoImported");
+                this.gridRef.current.wrappedInstance.loadFeed();
 
                 //this.setState({ loading: false });
             } catch (e) {
@@ -292,6 +286,11 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
                 alert(serializeException(e));
             }
         }
+    }
+
+    @autobind
+    async updateGrid(): Promise<void> {
+        this.gridRef.current.wrappedInstance.loadFeed();
     }
 
     @autobind
@@ -307,21 +306,9 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
 
         return (
             <View style={styles.container}>
-                <ImageGrid />
-                <TouchableWithoutFeedback
-                    onPress={this.uploadFromOS}
-                    hitSlop={{
-                        top: 4,
-                        bottom: 5,
-                        left: 25,
-                        right: 20,
-                    }}
-                >
-                    <View style={styles.icon}>
-                        <Icon name="plus" style={styles.actual_icon} size={25} />
-                    </View>
-                </TouchableWithoutFeedback>
-                <ImageGallery />
+                <NavHeader title="Photos" upload="true" addFn={this.uploadFromOS} />
+                <ImageGrid ref={this.gridRef} style={styles.gridStyle} />
+                <ImageGallery refreshFcn={this.updateGrid} />
                 <Modal transparent visible={loading} onRequestClose={this.toggle}>
                     <View style={styles.modal}>
                         <SpinningIndicator />
@@ -350,6 +337,9 @@ const styles = StyleSheet.create({
         margin: THUMBNAIL_SPACING,
         width: THUMBNAIL_SIZE,
         height: THUMBNAIL_SIZE,
+    },
+    gridStyle: {
+        zIndex: 10000,
     },
     heading: {
         fontSize: 18,

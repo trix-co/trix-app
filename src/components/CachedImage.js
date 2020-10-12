@@ -24,6 +24,8 @@ export default class CachedImage extends Component {
         await this.loadImage(filesystemURI, this.props.source.uri);
     }
 
+    async componentWillUnmount() {}
+
     async getImageFilesystemKey(remoteURI) {
         const hashed = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, remoteURI);
         return `${FileSystem.cacheDirectory}${hashed}.jpg`;
@@ -41,7 +43,9 @@ export default class CachedImage extends Component {
             }
 
             // otherwise download to cache
-            const imageObject = await FileSystem.downloadAsync(remoteURI, filesystemURI);
+            const imageObject = await FileSystem.downloadAsync(remoteURI, filesystemURI, {
+                sessionType: FileSystem.FileSystemSessionType.FOREGROUND,
+            });
             this.setState({
                 imgURI: imageObject.uri,
             });

@@ -5,8 +5,6 @@ import type { TrixPix, TrixPicture } from "../components/Model";
 
 const DEFAULT_PAGE_SIZE = 1000;
 
-type Subscription = () => void;
-
 export default class PhotoStore {
     // eslint-disable-next-line flowtype/no-weak-types
     cursor: any;
@@ -45,11 +43,12 @@ export default class PhotoStore {
         if (this.lastKnownEntry) {
             //console.log("bingo", lastKnownEntry);
             const snap = await this.query.endBefore(this.lastKnownEntry).get();
-            console.log(snap.docs);
+            console.log("photostore snap", snap.docs);
+            //console.log("hey");
             if (snap.docs.length === 0) {
-                //console.log("2");
+                //000console.log("yo");
                 if (!this.feed) {
-                    //console.log("3");
+                    //console.log("there");
                     this.feed = [];
                 }
                 return;
@@ -64,7 +63,9 @@ export default class PhotoStore {
             //console.log("size: ", Object.keys(posts).length);
             // eslint-disable-next-line prefer-destructuring
             this.lastKnownEntry = snap.docs[0];
+            console.log("loaded new entries");
         } else {
+            console.log("loaded whole feed");
             await this.loadFeed();
         }
     }
@@ -103,7 +104,12 @@ export default class PhotoStore {
     }
 
     addToFeed(entries: TrixPicture[]) {
-        const feed = _.uniqBy([...this.feed.slice(), ...entries], (entry) => entry.id);
+        var feed = _.uniqBy([...this.feed.slice(), ...entries], (entry) => entry.id);
+        //console.log(feed);
+        feed = _.map(feed, function (o) {
+            if (!(o.tombstone == true)) return o;
+        });
+        feed = _.without(feed, undefined);
         this.feed = _.orderBy(feed, (entry) => entry.timestamp, ["desc"]);
     }
 }

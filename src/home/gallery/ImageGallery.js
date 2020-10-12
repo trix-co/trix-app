@@ -146,6 +146,7 @@ class ImageGallery extends React.Component {
                         animatedOpacity={this.state.zoomInOutValue}
                         renderRight={this.props.renderHeaderRight}
                         onPressDone={this._closeGallery}
+                        refreshFcn={this.props.refreshFcn}
                     />
                 </Animated.View>
 

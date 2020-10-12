@@ -8,6 +8,8 @@ import { useNavigation } from "react-navigation-hooks";
 import { TextField, Firebase, Button, Text, Container, Theme } from "../components";
 
 import SignUpStore from "./SignUpStore";
+import Countries from "./country_codes_formatted.json";
+import RNPickerSelect from "react-native-picker-select";
 
 // Initialize Firebase JS SDK
 // https://firebase.google.com/docs/web/setup
@@ -35,6 +37,7 @@ export default function Phone() {
               }
             : undefined
     );
+    const [countryCode, setCountryCode] = React.useState("+1");
     const [loading, setLoading] = React.useState();
 
     return (
@@ -46,6 +49,29 @@ export default function Phone() {
                     <Text type="header2" gutterBottom>
                         Phone number
                     </Text>
+                    <View
+                        style={{
+                            paddingBottom: "6%",
+                            borderColor: "black",
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            paddingTop: "6%",
+                            paddingLeft: "5%",
+                            marginBottom: "5%",
+                        }}
+                    >
+                        <RNPickerSelect
+                            style={{
+                                placeholder: {
+                                    //fontSize: 16,
+                                    color: "black",
+                                },
+                            }}
+                            placeholder={{ label: "United States (+1)", value: "+1" }}
+                            onValueChange={(value) => setCountryCode(value)}
+                            items={Countries}
+                        />
+                    </View>
                     <TextField
                         //style={{ marginVertical: 10, fontSize: 17 }}
                         placeholder="999 999 9999"
@@ -54,8 +80,10 @@ export default function Phone() {
                         keyboardType="phone-pad"
                         textContentType="telephoneNumber"
                         returnKeyType="go"
-                        maxLength={10}
-                        onChangeText={(phoneNumber) => setPhoneNumber("+1".concat(phoneNumber))}
+                        onChangeText={(phoneNumber) => {
+                            setPhoneNumber(countryCode.concat(phoneNumber));
+                            console.log(countryCode.concat(phoneNumber));
+                        }}
                     />
                     <Button
                         label="Next"

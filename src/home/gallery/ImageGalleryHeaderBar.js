@@ -39,18 +39,29 @@ export default class ImageGalleryHeaderBar extends React.Component<InjectedProps
                     if (snapshots.size > 0) {
                         snapshots.forEach((item) => {
                             trixPix.doc(item.id).update({ tombstone: true });
-                            console.log("hoops", item.id);
+                            //console.log("hoops", item.id);
                         });
                     } else {
                         console.log("nothing in snapshot!");
                     }
                 });
-            Amplitude.logEventWithProperties("photoShared", {
-                imageURL: remoteURI,
-            });
-            this.props.photoStore.updateTombstones(remoteURI);
-            this.props.onPressDone();
-            Alert.alert("Photo sucessfully deleted - will not appear after next refresh.");
+
+            Alert.alert("Delete?", "Are you sure that you want to permanently delete this photo?", [
+                { text: "Cancel", onPress: () => console.log("Cancel Pressed") },
+                {
+                    text: "Delete",
+                    onPress: () => {
+                        Amplitude.logEventWithProperties("photoDeleted", {
+                            imageURL: remoteURI,
+                        });
+                        console.log("Delete Pressed");
+                        this.props.photoStore.updateTombstones(remoteURI);
+                        this.props.refreshFcn();
+                        this.props.onPressDone();
+                    },
+                    style: "destructive",
+                },
+            ]);
         } catch (e) {
             console.error(e);
         }

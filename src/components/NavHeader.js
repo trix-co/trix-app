@@ -28,9 +28,19 @@ export default class NavHeader extends React.Component<NavHeaderProps> {
         }
     }
 
+    @autobind
+    onAdd() {
+        const { addFn } = this.props;
+        //console.log("got em");
+        if (addFn) {
+            // console.log("yep!");
+            addFn();
+        }
+    }
+
     render(): React.Node {
-        const { onPress } = this;
-        const { title, back } = this.props;
+        const { onPress, onAdd } = this;
+        const { title, back, upload } = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.content}>
@@ -47,6 +57,23 @@ export default class NavHeader extends React.Component<NavHeaderProps> {
                             >
                                 <View style={styles.back}>
                                     <Icon name="chevron-left" size={25} />
+                                </View>
+                            </TouchableWithoutFeedback>
+                        )}
+                    </View>
+                    <View>
+                        {upload && (
+                            <TouchableWithoutFeedback
+                                onPress={onAdd}
+                                hitSlop={{
+                                    top: 10,
+                                    bottom: 10,
+                                    left: 20,
+                                    right: 100,
+                                }}
+                            >
+                                <View style={styles.add}>
+                                    <Icon name="plus" size={25} style={{ color: Theme.palette.secondary }} />
                                 </View>
                             </TouchableWithoutFeedback>
                         )}
@@ -79,13 +106,16 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
         borderColor: Theme.palette.borderColor,
         borderBottomWidth: Platform.OS === "ios" ? 0 : 0,
-        zIndex: 10000,
+        zIndex: -1,
         backgroundColor: "white",
+        //flexDirection: "row",
+        //justifyContent: "space-between",
+        //alignContent: "space-between",
     },
     content: {
         height: 35,
         flexDirection: "row",
-        justifyContent: "flex-start",
+        justifyContent: "space-between",
         alignItems: "flex-start",
     },
     side: {
@@ -101,5 +131,9 @@ const styles = StyleSheet.create({
     back: {
         marginLeft: Theme.spacing.tiny,
         //paddingEnd: Theme.spacing.tiny,
+    },
+    add: {
+        paddingTop: "2%",
+        marginRight: "7%",
     },
 });

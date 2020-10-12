@@ -29,7 +29,7 @@ export default class ImageUpload {
 
     static async upload(ogPic: Picture): Promise<string> {
         if (Platform.OS === "android") {
-            console.log("droidpic", ogPic.width, ogPic.height);
+            //console.log("droidpic", ogPic.width, ogPic.height);
         }
         const picture = await ImageManipulator.manipulateAsync(
             ogPic.uri,
