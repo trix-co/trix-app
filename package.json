@@ -1,6 +1,6 @@
 {
-    "name": "react-native-fiber-firebase",
-    "version": "1.1.7",
+    "name": "trix-app",
+    "version": "1.1.0",
     "private": true,
     "devDependencies": {
         "babel-eslint": "^8.2.1",
