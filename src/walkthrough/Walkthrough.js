@@ -24,9 +24,12 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
     };
 
     componentDidMount() {
-        StatusBar.setBarStyle("light-content");
+        if (Platform.OS == "iOS") {
+            StatusBar.setBarStyle("light-content");
+        }
         if (Platform.OS === "android") {
-            StatusBar.setBackgroundColor("#0059FF");
+            StatusBar.setBackgroundColor("white");
+            StatusBar.setBarStyle("dark-content");
         }
     }
 
@@ -86,7 +89,7 @@ let share: Share;
 
 const slides = [
     {
-        title: "You're in",
+        title: "",
         description:
             "Thanks for signing up for Trix! \n\nTrix's technology helps prevent facial recognition from working on your photos.",
         icon: <Image source={require("../../assets/trix_white.png")} style={{ height: 80, width: 250 }} />,

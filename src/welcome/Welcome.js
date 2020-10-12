@@ -1,7 +1,7 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import { StyleSheet, Dimensions, Image, View, Text } from "react-native";
+import { StyleSheet, Dimensions, Image, View, Text, StatusBar } from "react-native";
 //import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { Button, Container, Theme, AnimatedView, Firebase, serializeException } from "../components";
 import type { ScreenProps } from "../components/Types";
@@ -15,6 +15,11 @@ export default class Welcome extends React.Component<ScreenProps<>> {
     @autobind
     login() {
         this.props.navigation.navigate("Login");
+    }
+    componentDidMount() {
+        if (Platform.OS === "ios") {
+            StatusBar.setBarStyle("dark-content");
+        }
     }
 
     render(): React.Node {
@@ -38,9 +43,9 @@ export default class Welcome extends React.Component<ScreenProps<>> {
                     <Text
                         onPress={this.login}
                         hitSlop={{
-                            top: 10,
-                            bottom: 10,
-                            left: 25,
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
                             right: 20,
                         }}
                         style={styles.signIn}
@@ -92,6 +97,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: Theme.spacing.base,
         fontWeight: "bold",
+        zIndex: 10000,
         //fontFamily: "Ubuntu-Medium",
     },
     txtContainer: {
