@@ -8,3 +8,6 @@ Images taken in Trix are sent to Trix servers (AWS is currently used for hosting
 * Photos taken or uploaded to our service
 * Photos viewed and deleted from our app
 * Photos shared
+
+For questions, comments, or concerns please email dave@trix.co.
+
