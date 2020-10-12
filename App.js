@@ -15,13 +15,13 @@ import { Provider, inject } from "mobx-react/native";
 import { Feather } from "@expo/vector-icons";
 import * as Font from "expo-font";
 
-import { Images, Firebase, FeedStore, PhotoStore } from "./src/components";
+import { Images, Firebase, PhotoStore } from "./src/components";
 import type { ScreenProps } from "./src/components/Types";
 
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login, LoginValidate } from "./src/sign-up";
-import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, PhotoLib } from "./src/home";
+import { Profile, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, PhotoLib } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -185,19 +185,10 @@ const StackNavigatorOptions = {
     },
 };
 
-const ExploreNavigator = createStackNavigator(
-    {
-        Explore: { screen: Explore },
-        Comments: { screen: Comments },
-    },
-    StackNavigatorOptions
-);
-
 const ProfileNavigator = createStackNavigator(
     {
         Profile: { screen: Profile },
         Settings: { screen: Settings },
-        Comments: { screen: Comments },
     },
     StackNavigatorOptions
 );

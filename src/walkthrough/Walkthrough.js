@@ -5,9 +5,9 @@ import { View, StyleSheet, SafeAreaView, StatusBar, Platform, Image } from "reac
 import Swiper from "react-native-swiper";
 
 import Slide from "./Slide";
-import Connect from "./Connect";
-import Chat from "./Chat";
-import Share from "./Share";
+import Connect from "./Welcome";
+import Chat from "./Snap";
+import Share from "./Worth";
 import { Feather as Icon } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -91,7 +91,7 @@ const slides = [
     {
         title: "",
         description:
-            "Thanks for signing up for Trix! \n\nTrix's technology helps prevent facial recognition from working on your photos.",
+            "Thanks for signing up for Trix! \n\nTrix helps prevent facial recognition from working on your photos.",
         icon: <Image source={require("../../assets/trix_white.png")} style={{ height: 80, width: 250 }} />,
         show: () => {},
         hide: () => {},
@@ -99,7 +99,7 @@ const slides = [
     {
         title: "Snap a photo",
         description:
-            "All photos in Trix are automatically processed with our protective filter to help prevent facial recognition. \n\nThe more Trix-processed photos you upload to social apps & sites, the more effective the technology is.",
+            "All photos in Trix are automatically processed with a protective filter to help prevent facial recognition. \n\nThe more Trix-processed photos you upload to social apps & sites, the more effective the technology is.",
         icon: <FontAwesome name="camera-retro" style={{ color: "white" }} size={130} />,
         show: () => {},
         hide: () => {},
@@ -107,7 +107,7 @@ const slides = [
     {
         title: "Worth the wait",
         description:
-            "Trix's protective filter runs in the background after you take or upload a photo. \n\nWithin a few minutes protected photos will automatically appear in the app.",
+            "The protective filter runs in the background after you take or upload a photo. \n\nWithin a few minutes protected photos will automatically appear in the app.",
         icon: <FontAwesome name="shield" style={{ color: "white" }} size={150} />,
         show: () => {},
         hide: () => {},
