@@ -1,6 +1,5 @@
 // @flow
 import * as ImageManipulator from "expo-image-manipulator";
-import { RNS3 } from "react-native-aws3";
 import { Platform } from "react-native";
 import Urls from "../../api_urls.json";
 
