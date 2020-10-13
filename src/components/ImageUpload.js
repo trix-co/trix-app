@@ -2,6 +2,7 @@
 import * as ImageManipulator from "expo-image-manipulator";
 import { RNS3 } from "react-native-aws3";
 import { Platform } from "react-native";
+import Urls from "../../api_urls.json";
 
 export type Picture = {
     uri: string,
@@ -44,23 +45,13 @@ export default class ImageUpload {
             type: "image/jpeg",
         };
 
-        // const options = {
-        //     keyPrefix: "unprocessed/",
-        //     bucket: "trix",
-        //     region: "us-west-2",
-        //     awsUrl: "sfo2.digitaloceanspaces.com",
-        //     accessKey: "EASSTJ6DUES5Q6A4DK4F",
-        //     secretKey: "JIUBdNH/drQZvXB7FYOPj7G/5/XKPumWON87kBiL07s",
-        //     successActionStatus: 201,
-        // };
-
         try {
             const bdy = { id: file["name"] };
 
             var body = new FormData();
             body.append(file);
 
-            fetch("https://mgezb5eugf.execute-api.us-west-2.amazonaws.com/api", {
+            fetch(Urls["S3_PRESIGNED_API_URL"], {
                 method: "POST",
                 headers: {
                     accept: "*/*",
@@ -82,8 +73,7 @@ export default class ImageUpload {
                 });
             });
 
-            //console.log("https://trix.sfo2.cdn.digitaloceanspaces.com/".concat("unprocessed/").concat(file["name"]));
-            return "https://trix.sfo2.cdn.digitaloceanspaces.com/".concat("unprocessed/").concat(file["name"]);
+            return Urls["S3_STORAGE_URL"].concat("unprocessed/").concat(file["name"]);
         } catch (error) {
             console.log(error);
         }

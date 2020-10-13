@@ -43,9 +43,7 @@ export default class CachedImage extends Component {
             }
 
             // otherwise download to cache
-            const imageObject = await FileSystem.downloadAsync(remoteURI, filesystemURI, {
-                sessionType: FileSystem.FileSystemSessionType.FOREGROUND,
-            });
+            const imageObject = await FileSystem.downloadAsync(remoteURI, filesystemURI);
             this.setState({
                 imgURI: imageObject.uri,
             });

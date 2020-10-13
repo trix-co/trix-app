@@ -4,6 +4,7 @@ import autobind from "autobind-decorator";
 import * as React from "react";
 import { StyleSheet, TextInput, Image, Dimensions, View, Alert } from "react-native";
 import { Content } from "native-base";
+import Urls from "../../../api_urls.json";
 
 import {
     NavHeader,
@@ -40,7 +41,7 @@ export default class SharePicture extends React.Component<ScreenParams<Picture>,
     @autobind
     async enque(post: NativePicture): Promise<void> {
         try {
-            const resp = await fetch("https://ee5s4vrbxh.execute-api.us-west-2.amazonaws.com/api", {
+            const resp = await fetch(Urls["QUEUE_API_URL"], {
                 method: "POST",
                 headers: {
                     Accept: "application/json",

@@ -4,7 +4,7 @@ import autobind from "autobind-decorator";
 import * as React from "react";
 import * as firebase from "firebase";
 import * as Haptics from "expo-haptics";
-
+import Urls from "../../../api_urls.json";
 import {
     StyleSheet,
     View,
@@ -127,7 +127,7 @@ export default class Share extends React.Component<ScreenProps<>, ShareState> {
     @autobind
     async enque(post: NativePicture): Promise<void> {
         try {
-            const resp = await fetch("https://ee5s4vrbxh.execute-api.us-west-2.amazonaws.com/api", {
+            const resp = await fetch(Urls["QUEUE_API_URL"], {
                 method: "POST",
                 headers: {
                     Accept: "application/json",

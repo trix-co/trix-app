@@ -18,6 +18,7 @@ import * as Amplitude from "expo-analytics-amplitude";
 import * as firebase from "firebase";
 import _ from "lodash";
 import * as Haptics from "expo-haptics";
+import Urls from "../../api_urls.json";
 
 import { Feather as Icon, FontAwesome } from "@expo/vector-icons";
 
@@ -204,7 +205,7 @@ export class PhotoLib extends React.Component<ScreenParams<{ profile: Profile }>
     @autobind
     async enque(post: NativePicture): c {
         try {
-            const resp = await fetch("https://ee5s4vrbxh.execute-api.us-west-2.amazonaws.com/api", {
+            const resp = await fetch(Urls["QUEUE_API_URL"], {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -384,24 +385,3 @@ const styles = StyleSheet.create({
         color: Theme.palette.secondary,
     },
 });
-
-// const list = [
-//     {
-//         description: "Image 1",
-//         imageUrl: "https://trix-public.s3-us-west-2.amazonaws.com/trkcxeorzuiz_output_bbox.jpg",
-//         width: 480,
-//         height: 720,
-//     },
-//     {
-//         description: "Image 2",
-//         imageUrl: "http://placehold.it/640x640&text=Image%202",
-//         width: 640,
-//         height: 640,
-//     },
-//     {
-//         description: "Image 3",
-//         imageUrl: "http://placehold.it/640x640&text=Image%203",
-//         width: 640,
-//         height: 640,
-//     },
-// ];
