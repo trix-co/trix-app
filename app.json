@@ -1,7 +1,7 @@
 {
     "expo": {
         "name": "Trix",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "description": "Trix is a new kind of camera app that helps users prevent facial recognition and other unwanted use of their data",
         "orientation": "portrait",
         "privacy": "public",
@@ -19,17 +19,17 @@
         },
         "ios": {
             "bundleIdentifier": "co.trix.trixapp",
-            "buildNumber": "1.1.1",
+            "buildNumber": "1.1.2",
             "supportsTablet": true
         },
         "android": {
             "package": "co.trix.trixapp",
-            "versionCode": 111,
+            "permissions": ["CAMERA", "CAMERA_ROLL", "MANAGE_DOCUMENTS", "INTERNET", "WRITE_EXTERNAL_STORAGE"],
+            "versionCode": 112,
             "adaptiveIcon": {
                 "backgroundColor": "#0d2129",
                 "foregroundImage": "./assets/app_icon_android.png"
-            },
-            "permissions": ["CAMERA", "CAMERA_ROLL", "MANAGE_DOCUMENTS", "INTERNET", "WRITE_EXTERNAL_STORAGE"]
+            }
         },
         "assetBundlePatterns": ["assets/*"],
         "slug": "trix-app",

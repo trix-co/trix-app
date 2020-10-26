@@ -71,7 +71,7 @@
         "react-native-aws3": "^0.0.9",
         "react-native-clean-project": "^3.4.0",
         "react-native-gesture-handler": "~1.6.0",
-        "react-native-picker-select": "^8.0.1",
+        "react-native-picker-select": "8.0.0",
         "react-native-screens": "^2.11.0",
         "react-native-share": "^3.7.1",
         "react-native-svg": "12.1.0",
